@@ -1,5 +1,4 @@
 const paginate = require('express-paginate')
-const R = require('ramda')
 
 const { User } = require('../models')
 
@@ -13,16 +12,20 @@ async function index(req, res) {
   res.json({
     object: 'list',
     has_more: paginate.hasNextPages(req)(pageCount),
-    data: data.map(user => ({
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      created_at: user.created_at,
-      updated_at: user.updated_at
-    }))
+    data: data.map(user => User.transform(user))
+  })
+}
+
+async function show(req, res) {
+  const { id } = req.params
+  const data = await User.query().findById(id)
+
+  res.json({
+    ...User.transform(data)
   })
 }
 
 module.exports = {
-  index
+  index,
+  show
 }
