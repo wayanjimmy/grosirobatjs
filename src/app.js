@@ -5,7 +5,6 @@ const paginate = require('express-paginate')
 
 const config = require('./config')
 const createRouter = require('./router')
-const errorResponder = require('./middlewares/error-responder')
 const errorLogger = require('./middlewares/error-logger')
 
 function createApp() {
@@ -32,7 +31,6 @@ function createApp() {
   app.use('/api', router)
 
   app.use(errorLogger())
-  app.use(errorResponder())
 
   return app
 }

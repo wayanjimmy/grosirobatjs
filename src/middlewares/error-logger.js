@@ -35,7 +35,9 @@ function getLogLevel(status) {
 }
 
 function logRequestDetails(logLevel, req) {
-  logger[logLevel]('Request headers: ', deep)
+  logger[logLevel]('Request headers:', deepSupressLongStrings(req.headers))
+  logger[logLevel]('Request parameters:', deepSupressLongStrings(req.params))
+  logger[logLevel]('Request body:', req.body)
 }
 
 function deepSupressLongStrings(obj) {
