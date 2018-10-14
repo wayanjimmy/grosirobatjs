@@ -1,9 +1,12 @@
 const express = require('express')
 const morgan = require('morgan')
 const bodyParser = require('body-parser')
+const paginate = require('express-paginate')
 
 const config = require('./config')
 const createRouter = require('./router')
+const errorResponder = require('./middlewares/error-responder')
+const errorLogger = require('./middlewares/error-logger')
 
 function createApp() {
   const app = express()
@@ -19,8 +22,17 @@ function createApp() {
   app.use(bodyParser.text({ limit: '4mb', type: 'text/html' }))
   app.use(bodyParser.json({ limit: '4mb' }))
 
+  app.use(paginate.middleware(10, 50))
+  app.all((req, _res, next) => {
+    if (req.query.limit <= 10) req.query.limit = 10
+    next()
+  })
+
   const router = createRouter()
-  app.use('/', router)
+  app.use('/api', router)
+
+  app.use(errorLogger())
+  app.use(errorResponder())
 
   return app
 }
