@@ -8,7 +8,7 @@ function createErrorLogger(_opts) {
   const opts = {
     ..._opts,
     logRequest: status => status >= 400 && status !== 404 && status !== 503,
-    logStackTrace: status => status >= 500 && status !== 503
+    logStackTrace: status => status >= 400 && status !== 503
   }
 
   return function errorHandler(err, req, res, next) {
@@ -21,7 +21,7 @@ function createErrorLogger(_opts) {
     }
 
     if (opts.logStackTrace(status)) {
-      log(err, err.stack)
+      log(err.stack)
     } else {
       log(err.toString())
     }
@@ -42,7 +42,8 @@ function logRequestDetails(logLevel, req) {
 
 function deepSupressLongStrings(obj) {
   const newObj = {}
-  R.forEach((val, key) => {
+  Object.keys(obj).forEach(key => {
+    const val = obj[key]
     if (R.is(String, val) && val.length > SLICE_THRESHOLD) {
       newObj[key] = `${val.slice(0, SLICE_THRESHOLD)} ... [CONTENT SLICED]`
     } else if (R.is(Object, val)) {
@@ -50,8 +51,7 @@ function deepSupressLongStrings(obj) {
     } else {
       newObj[key] = val
     }
-  }, obj)
-
+  })
   return newObj
 }
 
