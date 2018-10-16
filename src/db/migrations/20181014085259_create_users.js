@@ -8,6 +8,7 @@ exports.up = function(knex, Promise) {
         .unique()
       t.string('password_digest').notNullable()
       t.timestamps(true, true)
+      t.timestamp('deleted_at').nullable()
     })
   ])
 }

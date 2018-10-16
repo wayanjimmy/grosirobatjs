@@ -8,6 +8,7 @@ const { userSchema } = require('../schemas')
 const index = ex.createRoute(async (req, res) => {
   const { results: data, total } = await User.query()
     .orderBy('created_at', 'ASC')
+    .whereNull('deleted_at')
     .range(req.skip, req.query.limit)
 
   const pageCount = Math.ceil(total / req.query.limit)
@@ -23,6 +24,7 @@ const show = ex.createRoute(async (req, res) => {
   const { id } = req.params
 
   const data = await User.query()
+    .whereNull('deleted_at')
     .findById(id)
     .throwIfNotFound()
 
@@ -65,10 +67,9 @@ const update = ex.createRoute(async (req, res) => {
 const destroy = ex.createRoute(async (req, res) => {
   const { id } = req.params
 
-  const user = await User.query
-    .delete()
-    .where({ id })
-    .returning('*')
+  const user = await User.query().patchAndFetchById(id, {
+    deleted_at: new Date().toISOString()
+  })
 
   res.json(User.transform(user))
 })
