@@ -1,4 +1,4 @@
-const R = require('ramda')
+const _ = require('lodash')
 
 const logger = require('../utils/logger')(__filename)
 
@@ -44,9 +44,10 @@ function deepSupressLongStrings(obj) {
   const newObj = {}
   Object.keys(obj).forEach(key => {
     const val = obj[key]
-    if (R.is(String, val) && val.length > SLICE_THRESHOLD) {
+
+    if (_.isString(val) && val.length > SLICE_THRESHOLD) {
       newObj[key] = `${val.slice(0, SLICE_THRESHOLD)} ... [CONTENT SLICED]`
-    } else if (R.is(Object, val)) {
+    } else if (_.isPlainObject(val)) {
       deepSupressLongStrings(val)
     } else {
       newObj[key] = val

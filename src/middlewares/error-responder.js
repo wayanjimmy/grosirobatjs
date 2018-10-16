@@ -1,122 +1,38 @@
-const { ValidationError, NotFoundError } = require('objection')
+const _ = require('lodash')
 
-const {
-  DBError,
-  UniqueViolationError,
-  NotNullViolationError,
-  ForeignKeyViolationError,
-  CheckViolationError,
-  DataError
-} = require('objection-db-errors')
+const errors = require('../utils/errors')
 
-// In this example `res` is an express response object.
-function errorHandler(err, res) {
-  if (err instanceof ValidationError) {
-    switch (err.type) {
-      case 'ModelValidation':
-        res.status(400).send({
+function createErrorResponder() {
+  return function errorResponder(err, _req, res, _next) {
+    switch (true) {
+      case err instanceof errors.ValidationError:
+        res.status(422).send({
           message: err.message,
-          type: 'ModelValidation',
-          data: err.data
+          data: formatValidationError(err)
         })
         break
-      case 'RelationExpression':
-        res.status(400).send({
-          message: err.message,
-          type: 'InvalidRelationExpression',
-          data: {}
-        })
-        break
-      case 'UnallowedRelation':
-        res.status(400).send({
-          message: err.message,
-          type: 'UnallowedRelation',
-          data: {}
-        })
-        break
-      case 'InvalidGraph':
-        res.status(400).send({
-          message: err.message,
-          type: 'InvalidGraph',
-          data: {}
-        })
-        break
+
       default:
-        res.status(400).send({
+        res.status(500).send({
           message: err.message,
-          type: 'UnknownValidationError',
           data: {}
         })
         break
     }
-  } else if (err instanceof NotFoundError) {
-    res.status(404).send({
-      message: err.message,
-      type: 'NotFound',
-      data: {}
-    })
-  } else if (err instanceof UniqueViolationError) {
-    res.status(409).send({
-      message: err.message,
-      type: 'UniqueViolation',
-      data: {
-        columns: err.columns,
-        table: err.table,
-        constraint: err.constraint
-      }
-    })
-  } else if (err instanceof NotNullViolationError) {
-    res.status(400).send({
-      message: err.message,
-      type: 'NotNullViolation',
-      data: {
-        column: err.column,
-        table: err.table
-      }
-    })
-  } else if (err instanceof ForeignKeyViolationError) {
-    res.status(409).send({
-      message: err.message,
-      type: 'ForeignKeyViolation',
-      data: {
-        table: err.table,
-        constraint: err.constraint
-      }
-    })
-  } else if (err instanceof CheckViolationError) {
-    res.status(400).send({
-      message: err.message,
-      type: 'CheckViolation',
-      data: {
-        table: err.table,
-        constraint: err.constraint
-      }
-    })
-  } else if (err instanceof DataError) {
-    res.status(400).send({
-      message: err.message,
-      type: 'InvalidData',
-      data: {}
-    })
-  } else if (err instanceof DBError) {
-    res.status(500).send({
-      message: err.message,
-      type: 'UnknownDatabaseError',
-      data: {}
-    })
-  } else {
-    res.status(500).send({
-      message: err.message,
-      type: 'UnknownError',
-      data: {}
-    })
   }
 }
 
-function createErrorResponder() {
-  return function errorResponder(err, _req, res, _next) {
-    errorHandler(err, res)
+function formatValidationError(err) {
+  const result = {}
+  if (err.path) {
+    result[err.path] = [_.defaultTo(err.message, 'is not valid')]
   }
+  if (err.inner && err.inner.length > 0) {
+    err.inner
+      .map(err => formatValidationError(err))
+      .reduce((prev, curr) => Object.assign(prev, curr), result)
+  }
+  return result
 }
 
 module.exports = createErrorResponder

@@ -1,6 +1,6 @@
 const path = require('path')
 const winston = require('winston')
-const R = require('ramda')
+const _ = require('lodash')
 
 const config = require('../config')
 
@@ -23,7 +23,7 @@ function createLogger(filePath) {
 }
 
 function setLevelForTransports(logger, level) {
-  R.forEach(transport => (transport.level = level), logger.transports)
+  _.each(logger.transports, transport => (transport.level = level))
 }
 
 module.exports = createLogger
