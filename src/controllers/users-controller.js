@@ -62,9 +62,21 @@ const update = ex.createRoute(async (req, res) => {
   res.json(User.transform(user))
 })
 
+const destroy = ex.createRoute(async (req, res) => {
+  const { id } = req.params
+
+  const user = await User.query
+    .delete()
+    .where({ id })
+    .returning('*')
+
+  res.json(User.transform(user))
+})
+
 module.exports = {
   index,
   show,
   store,
-  update
+  update,
+  destroy
 }
