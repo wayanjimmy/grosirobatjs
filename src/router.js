@@ -9,6 +9,7 @@ function createRouter() {
   router.get('/users', users.index)
   router.get('/users/:id', users.show)
   router.post('/users', users.store)
+  router.put('/users/:id', users.update)
 
   return router
 }

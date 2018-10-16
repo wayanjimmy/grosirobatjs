@@ -35,7 +35,7 @@ const store = ex.createRoute(async (req, res) => {
     context: { validatePassword: true }
   })
 
-  const passwordDigest = bcrypt.hashSync(value.password, 10)
+  const passwordDigest = await bcrypt.hash(value.password, 10)
 
   const user = await User.query()
     .insert({
@@ -48,8 +48,23 @@ const store = ex.createRoute(async (req, res) => {
   res.json(User.transform(user))
 })
 
+const update = ex.createRoute(async (req, res) => {
+  const options = { abortEarly: false, context: { validatePassword: false } }
+
+  if (req.body.password) {
+    options.context.validatePassword = true
+  }
+
+  const value = await userSchema.validate(req.body, options)
+
+  const user = await User.query().patchAndFetchById(req.params.id, value)
+
+  res.json(User.transform(user))
+})
+
 module.exports = {
   index,
   show,
-  store
+  store,
+  update
 }
