@@ -1,4 +1,6 @@
 const paginate = require('express-paginate')
+const Joi = require('joi')
+const bcrypt = require('bcrypt')
 
 const ex = require('../utils/express')
 const { User } = require('../models')
@@ -28,8 +30,34 @@ const show = ex.createRoute(async (req, res) => {
 })
 
 const store = ex.createRoute(async (req, res) => {
+  const { error, value } = Joi.validate(
+    req.body,
+    Joi.object().keys({
+      name: Joi.string()
+        .required()
+        .trim(),
+      email: Joi.string()
+        .email()
+        .required(),
+      password: Joi.string()
+        .required()
+        .trim()
+    })
+  )
+
+  if (error && error.details) {
+    console.log(error.details)
+    throw error
+  }
+
+  const passwordDigest = bcrypt.hashSync(value.password, 10)
+
   const user = await User.query()
-    .insert(req.body)
+    .insert({
+      name: value.name,
+      email: value.email,
+      password_digest: passwordDigest
+    })
     .returning('*')
   res.json(User.transform(user))
 })

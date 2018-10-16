@@ -1,7 +1,6 @@
 {
-  "name": "alpha",
+  "name": "grosirobatjs",
   "version": "1.0.0",
-  "description": "",
   "scripts": {
     "dev": "backpack"
   },
