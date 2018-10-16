@@ -1,5 +1,4 @@
 const paginate = require('express-paginate')
-const Joi = require('joi')
 const yup = require('yup')
 const bcrypt = require('bcrypt')
 
