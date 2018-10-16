@@ -12,6 +12,13 @@ function createErrorResponder() {
         })
         break
 
+      case err instanceof errors.NotFoundError:
+        res.status(404).send({
+          message: err.message,
+          data: {}
+        })
+        break
+
       default:
         res.status(500).send({
           message: err.message,

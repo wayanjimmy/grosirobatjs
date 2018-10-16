@@ -57,6 +57,7 @@ const store = ex.createRoute(async (req, res) => {
       password_digest: passwordDigest
     })
     .returning('*')
+
   res.json(User.transform(user))
 })
 
