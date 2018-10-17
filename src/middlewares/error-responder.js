@@ -5,23 +5,30 @@ const errors = require('../utils/errors')
 function createErrorResponder() {
   return function errorResponder(err, _req, res, _next) {
     switch (true) {
+      case err.name === 'UnauthorizedError':
+        res.status(401).json({
+          message: 'invalid token ...',
+          data: {}
+        })
+        break
+
       case err instanceof errors.ValidationError:
-        res.status(422).send({
-          message: err.message,
+        res.status(422).json({
+          message: err.message.toLowerCase(),
           data: formatValidationError(err)
         })
         break
 
       case err instanceof errors.NotFoundError:
-        res.status(404).send({
-          message: err.message,
+        res.status(404).json({
+          message: err.message.toLowerCase(),
           data: {}
         })
         break
 
       default:
-        res.status(500).send({
-          message: err.message,
+        res.status(500).json({
+          message: err.message.toLowerCase(),
           data: {}
         })
         break
