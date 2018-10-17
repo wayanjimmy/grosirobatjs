@@ -32,11 +32,13 @@ const Sidebar = () => (
         <div className="uk-width-expand">
           <span className="uk-text-small uk-text-muted">Selamat datang</span>
           <CurrentUserContext.Consumer>
-            {({ currentUser }) => (
-              <h4 className="uk-margin-remove-vertical text-light">
-                {currentUser.name}
-              </h4>
-            )}
+            {({ currentUser }) =>
+              console.log(currentUser) || (
+                <h4 className="uk-margin-remove-vertical text-light">
+                  {currentUser.name}
+                </h4>
+              )
+            }
           </CurrentUserContext.Consumer>
         </div>
       </div>

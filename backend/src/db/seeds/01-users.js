@@ -13,6 +13,14 @@ exports.seed = function(knex, _Promise) {
         updated_at: new Date().toISOString()
       }))
 
+      users.push({
+        name: 'Admin',
+        email: 'admin@grosirobat.com',
+        password_digest: bcrypt.hashSync('secret', 10),
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      })
+
       return knex('users').insert(users)
     })
 }

@@ -1,6 +1,6 @@
 const { Router } = require('express')
 
-const { auth, users, categories } = require('./controllers')
+const { auth, users, categories, me } = require('./controllers')
 const authMiddleware = require('./middlewares/auth')
 
 function createRouter() {
@@ -10,6 +10,8 @@ function createRouter() {
 
   router.post('/auth/login', auth.login)
 
+  router.get('/me', authMiddleware.required, me.index)
+
   router.get('/users', authMiddleware.required, users.index)
   router.post('/users', authMiddleware.required, users.store)
   router.get('/users/:id', authMiddleware.required, users.show)
@@ -17,6 +19,7 @@ function createRouter() {
   router.delete('/users/:id', authMiddleware.required, users.destroy)
 
   router.get('/categories', authMiddleware.required, categories.index)
+  router.get('/categories/:id', authMiddleware.required, categories.show)
 
   return router
 }

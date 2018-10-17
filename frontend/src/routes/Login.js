@@ -32,7 +32,7 @@ class Login extends Component {
                 onSubmit={async (values, actions) => {
                   actions.setSubmitting(true)
                   const res = await axios.post('/auth/login', values)
-                  const { data: user } = res.data
+                  const { data: user } = res
                   authUtil.setCurrentUser(user)
                   setCurrentUser(user)
                   actions.setSubmitting(false)

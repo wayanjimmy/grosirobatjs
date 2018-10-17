@@ -22,6 +22,17 @@ const index = ex.createRoute(async (req, res) => {
   })
 })
 
+const show = ex.createRoute(async (req, res) => {
+  const { id } = req.params
+
+  const category = await Category.query()
+    .findById(id)
+    .throwIfNotFound()
+
+  res.json(Category.transform(category))
+})
+
 module.exports = {
-  index
+  index,
+  show
 }

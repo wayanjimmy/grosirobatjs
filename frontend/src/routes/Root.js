@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import Loadable from 'react-loadable'
 import { Router } from '@reach/router'
+import axios from 'axios'
 
 import BaseLoading from '../views/Loading'
 import { CurrentUserContext } from '../contexts'
@@ -39,28 +40,24 @@ class Root extends Component {
 
   componentDidMount() {
     if (authUtil.isAuthenticated()) {
-      // axios
-      //   .post('/auth/me')
-      //   .then(res => {
-      //     const {data: validatedUser} = res.data
-      //     const user = authUtil.getCurrentUser()
-      //     authUtil.setCurrentUser({
-      //       ...user,
-      //       ...validatedUser
-      //     })
-      //     this.setState({
-      //       currentUser: {
-      //         id: user.id,
-      //         name: user.name,
-      //         email: user.email
-      //       }
-      //     })
-      //   })
-      //   .catch(error => {
-      //     if (error.response.status === 401) {
-      //       authUtil.setCurrentUser(null)
-      //     }
-      //   })
+      axios
+        .get('/me')
+        .then(res => {
+          const user = res.data
+          authUtil.setCurrentUser(user)
+          this.setState({
+            currentUser: {
+              id: user.id,
+              name: user.name,
+              email: user.email
+            }
+          })
+        })
+        .catch(error => {
+          if (error.response.status === 401) {
+            authUtil.setCurrentUser(null)
+          }
+        })
     }
   }
 
