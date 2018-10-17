@@ -19,6 +19,11 @@ const AsyncHome = Loadable({
   loading: Loading
 })
 
+const AsyncUserList = Loadable({
+  loader: () => import('./UserList'),
+  loading: Loading
+})
+
 class Root extends Component {
   state = {
     currentUser: {
@@ -43,8 +48,12 @@ class Root extends Component {
       axios
         .get('/me')
         .then(res => {
-          const user = res.data
-          authUtil.setCurrentUser(user)
+          const { data: validatedUser } = res
+          const user = authUtil.getCurrentUser()
+          authUtil.setCurrentUser({
+            ...user,
+            ...validatedUser
+          })
           this.setState({
             currentUser: {
               id: user.id,
@@ -71,6 +80,7 @@ class Root extends Component {
         <Router>
           <AsyncHome path="/" />
           <AsyncLogin path="/login" />
+          <AsyncUserList path="/user-list" />
         </Router>
       </CurrentUserContext.Provider>
     )
