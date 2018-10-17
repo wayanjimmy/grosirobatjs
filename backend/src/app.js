@@ -22,11 +22,7 @@ function createApp() {
   app.use(bodyParser.text({ limit: '4mb', type: 'text/html' }))
   app.use(bodyParser.json({ limit: '4mb' }))
 
-  app.use(paginate.middleware(10, 50))
-  app.all((req, _res, next) => {
-    if (req.query.limit <= 10) req.query.limit = 10
-    next()
-  })
+  app.use(paginate.middleware(5, 50))
 
   const router = createRouter()
   app.use('/api', router)

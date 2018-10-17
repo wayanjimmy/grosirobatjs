@@ -48,7 +48,7 @@ class UserList extends Component {
             <Paginator
               url="/users"
               extraParams={{ search }}
-              render={({ items }) => (
+              render={({ items, getPaginationProps }) => (
                 <div className="uk-card-body uk-grid">
                   <div className="uk-width-2-3@l uk-width-1-1@s">
                     <table className="uk-table uk-table-hover uk-table-divider uk-table-middle uk-table-small">
@@ -78,6 +78,7 @@ class UserList extends Component {
                         ))}
                       </tbody>
                     </table>
+                    <Paginator.Pagination {...getPaginationProps()} />
                   </div>
                 </div>
               )}

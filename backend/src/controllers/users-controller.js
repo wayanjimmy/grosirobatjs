@@ -12,7 +12,7 @@ const index = ex.createRoute(async (req, res) => {
   let userQuery = User.query()
     .orderBy('created_at', 'ASC')
     .whereNull('deleted_at')
-    .range(req.skip, req.query.limit)
+    .range(req.skip, req.skip + req.query.limit - 1)
 
   if (keyword.length > 0) {
     userQuery = userQuery

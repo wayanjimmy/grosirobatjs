@@ -4,7 +4,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import axios from 'axios'
 import isEqual from 'lodash.isequal'
-// import cn from 'classnames'
+import cn from 'classnames'
 
 import Loading from '../views/Loading'
 
@@ -15,8 +15,21 @@ function transformExtraParamsIntoQueryString(extraParams) {
     .join('&')
 }
 
-function Pagination() {
-  return <ul className="uk-pagination" data-uk-margin />
+function Pagination({ currentPage, hasMore, handlePageChange }) {
+  return (
+    <ul className="uk-pagination" data-uk-margin>
+      <li className={cn(currentPage === 1 && 'uk-disabled')}>
+        <a onClick={() => handlePageChange()}>
+          <span data-uk-pagination-previous={''} />
+        </a>
+      </li>
+      <li className={cn(hasMore && 'uk-disabled')}>
+        <a onClick={() => handlePageChange()}>
+          <span data-uk-pagination-next={''} />
+        </a>
+      </li>
+    </ul>
+  )
 }
 
 class Paginator extends Component {
@@ -47,7 +60,7 @@ class Paginator extends Component {
     const { currentPage } = this.state
     const { extraParams } = this.props
     return [
-      `?page=${currentPage}`,
+      `?page=${currentPage}&limit=10`,
       transformExtraParamsIntoQueryString(extraParams)
     ].join('&')
   }
