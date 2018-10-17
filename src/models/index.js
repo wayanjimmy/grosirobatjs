@@ -14,7 +14,7 @@ class User extends Model {
 
   static transform(user) {
     return {
-      object: 'customer',
+      object: 'user',
       id: user.id,
       name: user.name,
       email: user.email,
@@ -24,6 +24,23 @@ class User extends Model {
   }
 }
 
+class Category extends Model {
+  static get tableName() {
+    return 'categories'
+  }
+
+  static transform(category) {
+    return {
+      object: 'category',
+      id: category.id,
+      name: category.name,
+      created_at: category.created_at,
+      updated_at: category.updated_at
+    }
+  }
+}
+
 module.exports = {
-  User
+  User,
+  Category
 }

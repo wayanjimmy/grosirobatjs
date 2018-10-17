@@ -26,7 +26,7 @@ const login = ex.createRoute(async (req, res) => {
     throw new ValidationError(['is invalid'], '', 'email or password')
   }
 
-  user = generateJWTforUser(user)
+  user = generateJWTforUser(User.transform(user))
 
   res.json(
     _.omit(user, ['password_digest', 'deleted_at', 'created_at', 'updated_at'])

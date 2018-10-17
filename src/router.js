@@ -1,6 +1,6 @@
 const { Router } = require('express')
 
-const { auth, users } = require('./controllers')
+const { auth, users, categories } = require('./controllers')
 const authMiddleware = require('./middlewares/auth')
 
 function createRouter() {
@@ -15,6 +15,8 @@ function createRouter() {
   router.get('/users/:id', authMiddleware.required, users.show)
   router.put('/users/:id', authMiddleware.required, users.update)
   router.delete('/users/:id', authMiddleware.required, users.destroy)
+
+  router.get('/categories', authMiddleware.required, categories.index)
 
   return router
 }
