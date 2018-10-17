@@ -1,13 +1,13 @@
 const faker = require('faker')
 const bcrypt = require('bcrypt')
 
-exports.seed = function(knex, Promise) {
+exports.seed = function(knex, _Promise) {
   return knex('users')
     .del()
     .then(function() {
       const users = Array.from({ length: 10 }).map(() => ({
         name: faker.name.findName(),
-        email: faker.internet.email(),
+        email: faker.internet.email().toLowerCase(),
         password_digest: bcrypt.hashSync('secret', 10),
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()

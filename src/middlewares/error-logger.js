@@ -16,6 +16,7 @@ function createErrorLogger(_opts) {
     const logLevel = getLogLevel(status)
     const log = logger[logLevel]
 
+    // TODO: Don't log request on auth endpoint
     if (opts.logRequest(status)) {
       logRequestDetails(logLevel, req)
     }
