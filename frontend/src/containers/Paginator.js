@@ -3,7 +3,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import axios from 'axios'
-import isEqual from 'lodash.isequal'
+import isEqual from 'lodash/isEqual'
 import cn from 'classnames'
 
 import Loading from '../views/Loading'

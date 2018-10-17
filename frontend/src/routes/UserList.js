@@ -2,6 +2,7 @@
 
 import React, { Component } from 'react'
 import { Formik } from 'formik'
+import omit from 'lodash/omit'
 
 import Layout from '../views/Layout'
 import Paginator from '../containers/Paginator'
@@ -20,6 +21,10 @@ class UserList extends Component {
   state = {
     search: '',
     user: initUser()
+  }
+
+  handleEdit = user => {
+    this.setState({ user: omit(user, ['created_at', 'updated_at']) })
   }
 
   render() {
@@ -50,7 +55,9 @@ class UserList extends Component {
                 <div className="uk-width-expand uk-flex uk-flex-right">
                   <button
                     className="uk-button uk-button-text"
-                    onClick={() => {}}
+                    onClick={() => {
+                      this.setState({ user: initUser() })
+                    }}
                   >
                     Buat Baru
                   </button>
@@ -79,7 +86,7 @@ class UserList extends Component {
                                 className="uk-icon-link uk-invisible-hover"
                                 data-uk-icon="pencil"
                                 data-uk-tooltip="Sunting"
-                                onClick={() => {}}
+                                onClick={() => this.handleEdit(user)}
                               >
                                 {''}
                               </a>
@@ -93,6 +100,7 @@ class UserList extends Component {
                   <div className="uk-width-1-3@l uk-width-1-1">
                     <Formik
                       initialValues={{ ...user }}
+                      enableReinitialize
                       validate={values => {
                         let errors = {}
                         return errors
@@ -158,6 +166,7 @@ class UserList extends Component {
                             <button
                               className="uk-button uk-button-danger"
                               type="button"
+                              disabled={!values.id}
                               onClick={() => {}}
                             >
                               Hapus
