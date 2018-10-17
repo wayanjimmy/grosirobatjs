@@ -19,12 +19,12 @@ function Pagination({ currentPage, hasMore, handlePageChange }) {
   return (
     <ul className="uk-pagination" data-uk-margin>
       <li className={cn(currentPage === 1 && 'uk-disabled')}>
-        <a onClick={() => handlePageChange()}>
+        <a onClick={() => handlePageChange(currentPage - 1)}>
           <span data-uk-pagination-previous={''} />
         </a>
       </li>
-      <li className={cn(hasMore && 'uk-disabled')}>
-        <a onClick={() => handlePageChange()}>
+      <li className={cn(!hasMore && 'uk-disabled')}>
+        <a onClick={() => handlePageChange(currentPage + 1)}>
           <span data-uk-pagination-next={''} />
         </a>
       </li>
@@ -73,12 +73,14 @@ class Paginator extends Component {
         cancelToken: this.canceller.token
       })
       .then(res => {
-        const { data: items } = res.data
-        this.setState({ isLoading: false, items })
+        const { data: items, has_more: hasMore } = res.data
+        this.setState({ isLoading: false, items, hasMore })
       })
   }
 
-  handlePageChange = page => {}
+  handlePageChange = page => {
+    this.setState({ currentPage: page }, this.fetch)
+  }
 
   componentDidMount() {
     this.fetch()
@@ -105,6 +107,7 @@ class Paginator extends Component {
       getPaginationProps: (props = {}) => {
         return {
           handlePageChange: this.handlePageChange,
+          ...this.state,
           ...props
         }
       }
