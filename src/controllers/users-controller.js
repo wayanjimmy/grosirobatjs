@@ -1,15 +1,26 @@
 const paginate = require('express-paginate')
 const bcrypt = require('bcrypt')
+const _ = require('lodash')
 
 const ex = require('../utils/express')
 const { User } = require('../models')
 const { userSchema } = require('../schemas')
 
 const index = ex.createRoute(async (req, res) => {
-  const { results: data, total } = await User.query()
+  const keyword = _.defaultTo(req.query.search, '')
+
+  let userQuery = User.query()
     .orderBy('created_at', 'ASC')
     .whereNull('deleted_at')
     .range(req.skip, req.query.limit)
+
+  if (keyword.length > 0) {
+    userQuery = userQuery
+      .where('name', 'ilike', `%${keyword}%`)
+      .orWhere('email', 'ilike', `%${keyword}%`)
+  }
+
+  const { results: data, total } = await userQuery
 
   const pageCount = Math.ceil(total / req.query.limit)
 
