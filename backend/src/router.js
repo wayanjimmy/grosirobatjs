@@ -1,6 +1,6 @@
 const { Router } = require('express')
 
-const { auth, users, categories, me } = require('./controllers')
+const { auth, users, categories, me, distributors } = require('./controllers')
 const authMiddleware = require('./middlewares/auth')
 
 function createRouter() {
@@ -20,6 +20,9 @@ function createRouter() {
 
   router.get('/categories', authMiddleware.required, categories.index)
   router.get('/categories/:id', authMiddleware.required, categories.show)
+
+  router.get('/distributors', authMiddleware.required, distributors.index)
+  router.get('/distributors/:id', authMiddleware.required, distributors.show)
 
   return router
 }
