@@ -1,0 +1,13 @@
+{
+  "name": "grosirobatjs",
+  "license": "MIT",
+  "engines": {
+    "node": "10.12.0",
+    "yarn": "1.10.1"
+  },
+  "scripts": {
+    "build": "yarn --cwd frontend install && yarn --cwd frontend build",
+    "deploy": "cp -a frontend/build/. backend/public/",
+    "heroku-postbuild": "yarn build && yarn deploy"
+  }
+}

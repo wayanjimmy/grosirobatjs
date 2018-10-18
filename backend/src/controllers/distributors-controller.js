@@ -27,6 +27,23 @@ const index = ex.createRoute(async (req, res) => {
   })
 })
 
+const show = ex.createRoute(async (req, res) => {
+  const { id } = req.params
+
+  const distributor = await Distributor.query()
+    .whereNull('deleted_at')
+    .where('id', id)
+    .first()
+    .throwIfNotFound()
+
+  res.json(Distributor.transform(distributor))
+})
+
+const store = ex.createRoute(async (req, res) => {
+
+})
+
 module.exports = {
-  index
+  index,
+  show
 }

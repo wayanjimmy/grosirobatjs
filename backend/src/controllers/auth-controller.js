@@ -3,7 +3,7 @@ const _ = require('lodash')
 
 const ex = require('../utils/express')
 const { User } = require('../models')
-const loginSchema = require('../schemas/login-schema')
+const { loginSchema } = require('../schemas')
 const { ValidationError } = require('../utils/errors')
 const { generateJWTforUser } = require('../utils/auth')
 

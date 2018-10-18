@@ -47,6 +47,7 @@ class Distributor extends Model {
 
   static transform(distributor) {
     return {
+      object: 'distributor',
       id: distributor.id,
       name: distributor.name
     }

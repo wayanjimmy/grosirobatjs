@@ -1,4 +1,6 @@
 const express = require('express')
+const fallback = require('express-history-api-fallback')
+const path = require('path')
 const morgan = require('morgan')
 const bodyParser = require('body-parser')
 const paginate = require('express-paginate')
@@ -23,6 +25,11 @@ function createApp() {
   app.use(bodyParser.json({ limit: '4mb' }))
 
   app.use(paginate.middleware(5, 50))
+
+  const root = path.join(__dirname, '/../public')
+
+  app.use('/', express.static(root))
+  app.use(fallback('index.html', { root }))
 
   const router = createRouter()
   app.use('/api', router)

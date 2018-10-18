@@ -22,6 +22,7 @@ function createRouter() {
   router.get('/categories/:id', authMiddleware.required, categories.show)
 
   router.get('/distributors', authMiddleware.required, distributors.index)
+  router.get('/distributors/:id', authMiddleware.required, distributors.show)
 
   return router
 }
