@@ -28,11 +28,11 @@ function createApp() {
 
   const root = path.join(__dirname, '/../public')
 
-  app.use('/', express.static(root))
-  app.use(fallback('index.html', { root }))
-
   const router = createRouter()
   app.use('/api', router)
+
+  app.use('/', express.static(root))
+  app.use(fallback('index.html', { root }))
 
   app.use(errorLogger())
   app.use(errorResponder())

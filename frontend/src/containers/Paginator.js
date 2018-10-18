@@ -103,7 +103,6 @@ class Paginator extends Component {
     return render({
       ...this.state,
       fetch: this.fetch,
-      handlePageChange: this.handlePageChange,
       getPaginationProps: (props = {}) => {
         return {
           handlePageChange: this.handlePageChange,

@@ -68,116 +68,120 @@ class UserList extends Component {
               url="/users"
               extraParams={{ search }}
               render={({ items, getPaginationProps }) => (
-                <div className="uk-card-body uk-grid">
-                  <div className="uk-width-2-3@l uk-width-1-1@s">
-                    <table className="uk-table uk-table-hover uk-table-divider uk-table-middle uk-table-small">
-                      <thead>
-                        <tr>
-                          <th>Nama</th>
-                          <th />
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {items.map(user => (
-                          <tr className="uk-visible-toggle" key={user.id}>
-                            <td>{user.name}</td>
-                            <td>
-                              <a
-                                className="uk-icon-link uk-invisible-hover"
-                                data-uk-icon="pencil"
-                                data-uk-tooltip="Sunting"
-                                onClick={() => this.handleEdit(user)}
-                              >
-                                {''}
-                              </a>
-                            </td>
+                  <div className="uk-card-body uk-grid">
+                    <div className="uk-width-2-3@l uk-width-1-1@s">
+                      <table className="uk-table uk-table-hover uk-table-divider uk-table-middle uk-table-small">
+                        <thead>
+                          <tr>
+                            <th>Nama</th>
+                            <th />
                           </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                    <Paginator.Pagination {...getPaginationProps()} />
+                        </thead>
+                        <tbody>
+                          {items.map(user => (
+                            <tr className="uk-visible-toggle" key={user.id}>
+                              <td>{user.name}</td>
+                              <td>
+                                <a
+                                  className="uk-icon-link uk-invisible-hover"
+                                  data-uk-icon="pencil"
+                                  data-uk-tooltip="Sunting"
+                                  onClick={() => this.handleEdit(user)}
+                                >
+                                  {''}
+                                </a>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                      <Paginator.Pagination {...getPaginationProps()} />
+                    </div>
+                    <div className="uk-width-1-3@l uk-width-1-1">
+                      <Formik
+                        initialValues={{ ...user }}
+                        enableReinitialize
+                        validate={values => {
+                          let errors = {}
+                          return errors
+                        }}
+                        render={({
+                          values,
+                          handleChange,
+                          handleSubmit,
+                          isSubmitting
+                        }) => (
+                          <form
+                            onSubmit={handleSubmit}
+                            className="uk-form-stacked"
+                          >
+                            <div className="uk-margin">
+                              <label htmlFor="name" className="uk-form-label">
+                                Nama
+                              </label>
+                              <div className="uk-form-controls">
+                                <InputText
+                                  name="name"
+                                  placeholder="Nama"
+                                  value={values.name}
+                                  onChange={handleChange}
+                                />
+                              </div>
+                            </div>
+                            <div className="uk-margin">
+                              <label htmlFor="email" className="uk-form-label">
+                                Email
+                              </label>
+                              <div className="uk-form-controls">
+                                <InputText
+                                  name="email"
+                                  placeholder="Email"
+                                  value={values.email}
+                                  onChange={handleChange}
+                                />
+                              </div>
+                            </div>
+                            <div className="uk-margin">
+                              <label
+                                className="uk-form-label"
+                                htmlFor="password"
+                              >
+                                Sandi
+                              </label>
+                              <div className="uk-form-controls">
+                                <InputText
+                                  name="password"
+                                  type="password"
+                                  placeholder="****"
+                                  value={values.password || ''}
+                                  onChange={handleChange}
+                                />
+                              </div>
+                            </div>
+                            <div className="uk-margin uk-flex uk-flex-between">
+                              <button
+                                className="uk-button uk-button-primary"
+                                type="submit"
+                                disabled={isSubmitting}
+                              >
+                                Simpan
+                              </button>
+                              <button
+                                className="uk-button uk-button-danger"
+                                type="button"
+                                disabled={!values.id}
+                                onClick={() => {}}
+                              >
+                                Hapus
+                              </button>
+                            </div>
+                          </form>
+                        )}
+                      />
+                    </div>
                   </div>
-                  <div className="uk-width-1-3@l uk-width-1-1">
-                    <Formik
-                      initialValues={{ ...user }}
-                      enableReinitialize
-                      validate={values => {
-                        let errors = {}
-                        return errors
-                      }}
-                      render={({
-                        values,
-                        handleChange,
-                        handleSubmit,
-                        isSubmitting
-                      }) => (
-                        <form
-                          onSubmit={handleSubmit}
-                          className="uk-form-stacked"
-                        >
-                          <div className="uk-margin">
-                            <label htmlFor="name" className="uk-form-label">
-                              Nama
-                            </label>
-                            <div className="uk-form-controls">
-                              <InputText
-                                name="name"
-                                placeholder="Nama"
-                                value={values.name}
-                                onChange={handleChange}
-                              />
-                            </div>
-                          </div>
-                          <div className="uk-margin">
-                            <label htmlFor="email" className="uk-form-label">
-                              Email
-                            </label>
-                            <div className="uk-form-controls">
-                              <InputText
-                                name="email"
-                                placeholder="Email"
-                                value={values.email}
-                                onChange={handleChange}
-                              />
-                            </div>
-                          </div>
-                          <div className="uk-margin">
-                            <label className="uk-form-label" htmlFor="password">
-                              Sandi
-                            </label>
-                            <div className="uk-form-controls">
-                              <InputText
-                                name="password"
-                                type="password"
-                                placeholder="****"
-                                value={values.password || ''}
-                                onChange={handleChange}
-                              />
-                            </div>
-                          </div>
-                          <div className="uk-margin uk-flex uk-flex-between">
-                            <button
-                              className="uk-button uk-button-primary"
-                              type="submit"
-                              disabled={isSubmitting}
-                            >
-                              Simpan
-                            </button>
-                            <button
-                              className="uk-button uk-button-danger"
-                              type="button"
-                              disabled={!values.id}
-                              onClick={() => {}}
-                            >
-                              Hapus
-                            </button>
-                          </div>
-                        </form>
-                      )}
-                    />
-                  </div>
-                </div>
-              )}
+                )
+              }
             />
           </div>
         </div>
