@@ -22,7 +22,14 @@ function createRouter() {
   router.get('/categories/:id', authMiddleware.required, categories.show)
 
   router.get('/distributors', authMiddleware.required, distributors.index)
+  router.post('/distributors', authMiddleware.required, distributors.store)
   router.get('/distributors/:id', authMiddleware.required, distributors.show)
+  router.put('/distributors/:id', authMiddleware.required, distributors.update)
+  router.delete(
+    '/distributors/:id',
+    authMiddleware.required,
+    distributors.destroy
+  )
 
   return router
 }

@@ -20,11 +20,9 @@ class DistributorList extends Component {
     search: ''
   }
 
-  handleEdit = distributor => {
-  }
+  handleEdit = distributor => {}
 
-  handleDelete = (distributor, fetch) => {
-  }
+  handleDelete = (distributor, fetch) => {}
 
   render() {
     const { search, distributor } = this.state
