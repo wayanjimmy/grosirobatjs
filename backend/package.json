@@ -24,9 +24,7 @@
     "pg": "^7.5.0",
     "server-destroy": "^1.0.1",
     "winston": "^3.1.0",
-    "yup": "^0.26.6"
-  },
-  "devDependencies": {
+    "yup": "^0.26.6",
     "faker": "^4.1.0"
   }
 }
