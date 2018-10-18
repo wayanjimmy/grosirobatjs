@@ -1,41 +1,33 @@
 import React, { Component } from 'react'
-import { Formik } from 'formik'
-import omit from 'lodash/omit'
 import axios from 'axios'
+import { Formik } from 'formik'
 
-import Layout from '../views/Layout'
 import Paginator from '../containers/Paginator'
+import Layout from '../views/Layout'
 import InputText from '../views/InputText'
 import InputMessage from '../views/InputMessage'
 
-function initUser() {
+function initDistributor() {
   return {
     id: null,
-    name: '',
-    email: '',
-    password: ''
+    name: ''
   }
 }
 
-class UserList extends Component {
+class DistributorList extends Component {
   state = {
-    search: '',
-    user: initUser()
+    distributor: initDistributor(),
+    search: ''
   }
 
-  handleEdit = user => {
-    this.setState({ user: omit(user, ['created_at', 'updated_at']) })
+  handleEdit = distributor => {
   }
 
-  handleDelete = async (user, fetch) => {
-    if (window.confirm(`Yakin menghapus ${user.name} ?`)) {
-      await axios.delete(`/users/${user.id}`)
-      this.setState({ user: initUser() }, fetch)
-    }
+  handleDelete = (distributor, fetch) => {
   }
 
   render() {
-    const { search, user } = this.state
+    const { search, distributor } = this.state
 
     return (
       <Layout>
@@ -49,7 +41,7 @@ class UserList extends Component {
                     <input
                       className="uk-search-input"
                       type="search"
-                      placeholder="Cari pegawai"
+                      placeholder="Cari distributor"
                       defaultValue=""
                       onKeyPress={e => {
                         if (e.key === 'Enter') {
@@ -63,7 +55,7 @@ class UserList extends Component {
                   <button
                     className="uk-button uk-button-text"
                     onClick={() => {
-                      this.setState({ user: initUser() })
+                      this.setState({ distributor: initDistributor() })
                     }}
                   >
                     Buat Baru
@@ -72,7 +64,7 @@ class UserList extends Component {
               </div>
             </div>
             <Paginator
-              url="/users"
+              url="/distributors"
               extraParams={{ search }}
               render={({ items, fetch, getPaginationProps }) => (
                 <div className="uk-card-body uk-grid">
@@ -85,15 +77,18 @@ class UserList extends Component {
                         </tr>
                       </thead>
                       <tbody>
-                        {items.map(user => (
-                          <tr className="uk-visible-toggle" key={user.id}>
-                            <td>{user.name}</td>
+                        {items.map(distributor => (
+                          <tr
+                            className="uk-visible-toggle"
+                            key={distributor.id}
+                          >
+                            <td>{distributor.name}</td>
                             <td className="uk-text-center">
                               <button
                                 className="uk-icon-link uk-invisible-hover"
                                 data-uk-icon="pencil"
                                 data-uk-tooltip="Sunting"
-                                onClick={() => this.handleEdit(user)}
+                                onClick={() => this.handleEdit(distributor)}
                               >
                                 {''}
                               </button>
@@ -106,17 +101,23 @@ class UserList extends Component {
                   </div>
                   <div className="uk-width-1-3@l uk-width-1-1">
                     <Formik
-                      initialValues={{ ...user }}
+                      initialValues={{ ...distributor }}
                       enableReinitialize
                       onSubmit={async (values, actions) => {
                         actions.setSubmitting(true)
                         try {
                           if (values.id) {
-                            await axios.put(`/users/${values.id}`, values)
+                            await axios.put(
+                              `/distributors/${values.id}`,
+                              values
+                            )
                             fetch()
                           } else {
-                            await axios.post('/users', values)
-                            this.setState({ user: initUser() }, fetch)
+                            await axios.post('/distributors', values)
+                            this.setState(
+                              { distributor: initDistributor() },
+                              fetch
+                            )
                           }
                         } catch (err) {
                           actions.setErrors(err.response.data.data)
@@ -149,35 +150,6 @@ class UserList extends Component {
                             </div>
                             <InputMessage error={errors.name} />
                           </div>
-                          <div className="uk-margin">
-                            <label htmlFor="email" className="uk-form-label">
-                              Email
-                            </label>
-                            <div className="uk-form-controls">
-                              <InputText
-                                name="email"
-                                placeholder="Email"
-                                value={values.email}
-                                onChange={handleChange}
-                              />
-                            </div>
-                            <InputMessage error={errors.email} />
-                          </div>
-                          <div className="uk-margin">
-                            <label className="uk-form-label" htmlFor="password">
-                              Sandi
-                            </label>
-                            <div className="uk-form-controls">
-                              <InputText
-                                name="password"
-                                type="password"
-                                placeholder="****"
-                                value={values.password || ''}
-                                onChange={handleChange}
-                              />
-                            </div>
-                            <InputMessage error={errors.password} />
-                          </div>
                           <div className="uk-margin uk-flex uk-flex-between">
                             <button
                               className="uk-button uk-button-primary"
@@ -209,4 +181,4 @@ class UserList extends Component {
   }
 }
 
-export default UserList
+export default DistributorList

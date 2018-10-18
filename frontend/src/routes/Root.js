@@ -24,6 +24,11 @@ const AsyncUserList = Loadable({
   loading: Loading
 })
 
+const AsyncDistributorList = Loadable({
+  loader: () => import('./DistributorList'),
+  loading: Loading
+})
+
 class Root extends Component {
   state = {
     currentUser: {
@@ -63,8 +68,8 @@ class Root extends Component {
           })
         })
         .catch(error => {
-          if (error.response.status === 401) {
-            authUtil.setCurrentUser(null)
+          if (error.response.status === 401 || error.response.status === 404) {
+            authUtil.forgetCurrentUser()
           }
         })
     }
@@ -81,6 +86,7 @@ class Root extends Component {
           <AsyncHome path="/" />
           <AsyncLogin path="/login" />
           <AsyncUserList path="/user-list" />
+          <AsyncDistributorList path="/distributor-list" />
         </Router>
       </CurrentUserContext.Provider>
     )

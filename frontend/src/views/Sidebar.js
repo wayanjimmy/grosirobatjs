@@ -47,6 +47,9 @@ const Sidebar = () => (
         <MenuItem to="/user-list" icon="users">
           Pegawai
         </MenuItem>
+        <MenuItem to="/distributor-list" icon="album">
+          Distributor
+        </MenuItem>
       </ul>
     </div>
   </aside>
