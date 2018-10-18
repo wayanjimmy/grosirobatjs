@@ -40,7 +40,21 @@ class Category extends Model {
   }
 }
 
+class Distributor extends Model {
+  static get tableName() {
+    return 'distributors'
+  }
+
+  static transform(distributor) {
+    return {
+      id: distributor.id,
+      name: distributor.name
+    }
+  }
+}
+
 module.exports = {
   User,
-  Category
+  Category,
+  Distributor
 }
