@@ -24,7 +24,6 @@
     "objection-db-errors": "^1.0.0",
     "pg": "^7.5.0",
     "server-destroy": "^1.0.1",
-    "uuid": "^3.3.2",
     "winston": "^3.1.0",
     "yup": "^0.26.6"
   }
