@@ -7,8 +7,8 @@ const paginate = require('express-paginate')
 
 const config = require('./config')
 const createRouter = require('./router')
-const errorLogger = require('./middlewares/error-logger')
-const errorResponder = require('./middlewares/error-responder')
+const errorLogger = require('./middlewares/error-logger')()
+const errorResponder = require('./middlewares/error-responder')()
 
 function createApp() {
   const app = express()
@@ -34,8 +34,8 @@ function createApp() {
   app.use('/', express.static(root))
   app.use(fallback('index.html', { root }))
 
-  app.use(errorLogger())
-  app.use(errorResponder())
+  app.use(errorLogger)
+  app.use(errorResponder)
 
   return app
 }

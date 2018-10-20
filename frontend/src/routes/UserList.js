@@ -7,6 +7,7 @@ import Layout from '../views/Layout'
 import Paginator from '../containers/Paginator'
 import InputText from '../views/InputText'
 import InputMessage from '../views/InputMessage'
+import EditButton from '../views/EditButton'
 
 function initUser() {
   return {
@@ -89,14 +90,9 @@ class UserList extends Component {
                           <tr className="uk-visible-toggle" key={user.id}>
                             <td>{user.name}</td>
                             <td className="uk-text-center">
-                              <button
-                                className="uk-icon-link uk-invisible-hover"
-                                data-uk-icon="pencil"
-                                data-uk-tooltip="Sunting"
+                              <EditButton
                                 onClick={() => this.handleEdit(user)}
-                              >
-                                {''}
-                              </button>
+                              />
                             </td>
                           </tr>
                         ))}

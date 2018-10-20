@@ -19,7 +19,10 @@ function createRouter() {
   router.delete('/users/:id', authMiddleware.required, users.destroy)
 
   router.get('/categories', authMiddleware.required, categories.index)
+  router.post('/categories', authMiddleware.required, categories.store)
   router.get('/categories/:id', authMiddleware.required, categories.show)
+  router.put('/categories/:id', authMiddleware.required, categories.update)
+  router.delete('/categories/:id', authMiddleware.required, categories.destroy)
 
   router.get('/distributors', authMiddleware.required, distributors.index)
   router.post('/distributors', authMiddleware.required, distributors.store)

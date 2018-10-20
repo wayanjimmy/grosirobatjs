@@ -13,19 +13,20 @@ const AsyncLogin = Loadable({
   loader: () => import('./Login'),
   loading: Loading
 })
-
 const AsyncHome = Loadable({
   loader: () => import('./Home'),
   loading: Loading
 })
-
 const AsyncUserList = Loadable({
   loader: () => import('./UserList'),
   loading: Loading
 })
-
 const AsyncDistributorList = Loadable({
   loader: () => import('./DistributorList'),
+  loading: Loading
+})
+const AsyncCategoryList = Loadable({
+  loader: () => import('./CategoryList'),
   loading: Loading
 })
 
@@ -87,6 +88,7 @@ class Root extends Component {
           <AsyncLogin path="/login" />
           <AsyncUserList path="/user-list" />
           <AsyncDistributorList path="/distributor-list" />
+          <AsyncCategoryList path="/category-list" />
         </Router>
       </CurrentUserContext.Provider>
     )

@@ -8,25 +8,25 @@ import InputText from '../views/InputText'
 import InputMessage from '../views/InputMessage'
 import EditButton from '../views/EditButton'
 
-function initDistributor() {
+function initCategory() {
   return {
     id: null,
     name: ''
   }
 }
 
-class DistributorList extends Component {
+class CategoryList extends Component {
   state = {
-    distributor: initDistributor(),
+    category: initCategory(),
     search: ''
   }
 
-  handleEdit = distributor => {}
+  handleEdit = category => {}
 
-  handleDelete = (distributor, fetch) => {}
+  handleDelete = (category, fetch) => {}
 
   render() {
-    const { search, distributor } = this.state
+    const { search, category } = this.state
 
     return (
       <Layout>
@@ -40,7 +40,7 @@ class DistributorList extends Component {
                     <input
                       className="uk-search-input"
                       type="search"
-                      placeholder="Cari distributor"
+                      placeholder="Cari kategori"
                       defaultValue=""
                       onKeyPress={e => {
                         if (e.key === 'Enter') {
@@ -54,7 +54,7 @@ class DistributorList extends Component {
                   <button
                     className="uk-button uk-button-text"
                     onClick={() => {
-                      this.setState({ distributor: initDistributor() })
+                      this.setState({ category: initCategory() })
                     }}
                   >
                     Buat Baru
@@ -63,7 +63,7 @@ class DistributorList extends Component {
               </div>
             </div>
             <Paginator
-              url="/distributors"
+              url="/categories"
               extraParams={{ search }}
               render={({ items, fetch, getPaginationProps }) => (
                 <div className="uk-card-body uk-grid">
@@ -76,15 +76,12 @@ class DistributorList extends Component {
                         </tr>
                       </thead>
                       <tbody>
-                        {items.map(distributor => (
-                          <tr
-                            className="uk-visible-toggle"
-                            key={distributor.id}
-                          >
-                            <td>{distributor.name}</td>
+                        {items.map(category => (
+                          <tr className="uk-visible-toggle" key={category.id}>
+                            <td>{category.name}</td>
                             <td className="uk-text-center">
                               <EditButton
-                                onClick={() => this.handleEdit(distributor)}
+                                onClick={() => this.handleEdit(category)}
                               />
                             </td>
                           </tr>
@@ -95,23 +92,17 @@ class DistributorList extends Component {
                   </div>
                   <div className="uk-width-1-3@l uk-width-1-1">
                     <Formik
-                      initialValues={{ ...distributor }}
+                      initialValues={{ ...category }}
                       enableReinitialize
                       onSubmit={async (values, actions) => {
                         actions.setSubmitting(true)
                         try {
                           if (values.id) {
-                            await axios.put(
-                              `/distributors/${values.id}`,
-                              values
-                            )
+                            await axios.put(`/categories/${values.id}`, values)
                             fetch()
                           } else {
-                            await axios.post('/distributors', values)
-                            this.setState(
-                              { distributor: initDistributor() },
-                              fetch
-                            )
+                            await axios.post('/categories', values)
+                            this.setState({ category: initCategory() }, fetch)
                           }
                         } catch (err) {
                           actions.setErrors(err.response.data.data)
@@ -175,4 +166,4 @@ class DistributorList extends Component {
   }
 }
 
-export default DistributorList
+export default CategoryList

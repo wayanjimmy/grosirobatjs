@@ -54,8 +54,59 @@ class Distributor extends Model {
   }
 }
 
+class Product extends Model {
+  static get tableName() {
+    return 'products'
+  }
+
+  static transform({ id, name, category_id }) {
+    return {
+      object: 'product',
+      id,
+      name,
+      category_id
+    }
+  }
+}
+
+class Variant extends Model {
+  static get tableName() {
+    return 'variants'
+  }
+
+  static relationMappings = {
+    product: {
+      relation: Model.BelongsToOneRelation,
+      modelClass: Product,
+      join: {
+        from: 'variants.product_id',
+        to: 'products.id'
+      }
+    }
+  }
+
+  static transform({
+    id,
+    product_id,
+    price,
+    scaled_quantity,
+    unit_of_measure
+  }) {
+    return {
+      object: 'variant',
+      id,
+      product_id,
+      price,
+      scaled_quantity,
+      unit_of_measure
+    }
+  }
+}
+
 module.exports = {
   User,
   Category,
-  Distributor
+  Distributor,
+  Product,
+  Variant
 }

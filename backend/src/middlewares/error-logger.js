@@ -11,7 +11,7 @@ function createErrorLogger(_opts) {
     logStackTrace: status => status >= 400 && status !== 503
   }
 
-  return function errorHandler(err, req, _res, next) {
+  return function errorHandler(err, req, res, next) {
     const status = err.status ? err.status : 500
     const logLevel = getLogLevel(status)
     const log = logger[logLevel]
@@ -37,7 +37,7 @@ function getLogLevel(status) {
 function logRequestDetails(logLevel, req) {
   logger[logLevel]('Request headers:', deepSupressLongStrings(req.headers))
   logger[logLevel]('Request parameters:', deepSupressLongStrings(req.params))
-  logger[logLevel]('Request body:', req.body)
+  logger[logLevel]('Request body:', deepSupressLongStrings(req.body))
 }
 
 function deepSupressLongStrings(obj) {

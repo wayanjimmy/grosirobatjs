@@ -15,6 +15,7 @@
     "express-history-api-fallback": "^2.2.1",
     "express-jwt": "^5.3.1",
     "express-paginate": "^1.0.0",
+    "faker": "^4.1.0",
     "jsonwebtoken": "^8.3.0",
     "knex": "^0.15.2",
     "lodash": "^4.17.11",
@@ -23,8 +24,8 @@
     "objection-db-errors": "^1.0.0",
     "pg": "^7.5.0",
     "server-destroy": "^1.0.1",
+    "uuid": "^3.3.2",
     "winston": "^3.1.0",
-    "yup": "^0.26.6",
-    "faker": "^4.1.0"
+    "yup": "^0.26.6"
   }
 }
