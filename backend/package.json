@@ -2,7 +2,8 @@
   "name": "grosirobatjs",
   "version": "1.0.0",
   "scripts": {
-    "dev": "backpack"
+    "dev": "backpack",
+    "build": "backpack build"
   },
   "keywords": [],
   "author": "",
