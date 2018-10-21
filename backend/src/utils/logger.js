@@ -1,19 +1,24 @@
+//@ts-check
+
+const { format, transports, createLogger } = require('winston')
 const path = require('path')
-const winston = require('winston')
 const _ = require('lodash')
 
 const config = require('../config')
 
-function createLogger(filePath) {
-  const fileName = path.basename(filePath)
+function log(filePath) {
+  const filename = path.basename(filePath)
 
-  const logger = winston.createLogger({
+  const logger = createLogger({
     transports: [
-      new winston.transports.Console({
-        colorize: config.NODE_ENV === 'development',
-        label: fileName,
-        timestamp: true
-      })
+      new transports.Console({
+        format: format.combine(
+          format.colorize(),
+          format.timestamp(),
+          format.simple()
+        )
+      }),
+      new transports.File({ filename })
     ]
   })
 
@@ -26,4 +31,4 @@ function setLevelForTransports(logger, level) {
   _.each(logger.transports, transport => (transport.level = level))
 }
 
-module.exports = createLogger
+module.exports = log
