@@ -1,45 +1,72 @@
+//@ts-check
+
 const paginate = require('express-paginate')
 const bcrypt = require('bcrypt')
 const _ = require('lodash')
+const knex = require('knex')(require('../config/knexfile'))
+const joinJs = require('join-js').default
 
 const ex = require('../utils/express')
-const { User } = require('../models')
 const { userSchema } = require('../schemas')
+const { getSelect, relationMaps, userFields } = require('../utils/db')
+const { userTransformer } = require('../utils/transformers')
+const { NotFoundError } = require('../utils/errors')
+
+const userQuery = () =>
+  knex('users')
+    .select(...getSelect('users', 'user', userFields))
+    .whereNull('deleted_at')
 
 const index = ex.createRoute(async (req, res) => {
   const keyword = _.defaultTo(req.query.search, '')
+  const {
+    offset,
+    query: { limit }
+  } = req
 
-  let userQuery = User.query()
-    .orderBy('created_at', 'ASC')
-    .whereNull('deleted_at')
-    .range(req.skip, req.skip + req.query.limit - 1)
+  let q = userQuery()
+    .limit(limit)
+    .offset(offset)
+
+  let countQ = knex('users').whereNull('deleted_at')
 
   if (keyword.length > 0) {
-    userQuery = userQuery
+    q = q
+      .where('name', 'ilike', `%${keyword}%`)
+      .orWhere('email', 'ilike', `%${keyword}%`)
+
+    countQ = countQ
       .where('name', 'ilike', `%${keyword}%`)
       .orWhere('email', 'ilike', `%${keyword}%`)
   }
 
-  const { results: data, total } = await userQuery
+  countQ = countQ.count()
 
-  const pageCount = Math.ceil(total / req.query.limit)
+  let [users, [countRes]] = await Promise.all([q, countQ])
+
+  const pageCount = Math.ceil(countRes.count / limit)
+
+  users = joinJs.map(users, relationMaps, 'userMap', 'user_')
 
   res.json({
     object: 'list',
     has_more: paginate.hasNextPages(req)(pageCount),
-    data: data.map(user => User.transform(user))
+    data: users.map(user => userTransformer(user))
   })
 })
 
 const show = ex.createRoute(async (req, res) => {
   const { id } = req.params
 
-  const data = await User.query()
-    .whereNull('deleted_at')
-    .findById(id)
-    .throwIfNotFound()
+  let users = await userQuery().where('id', id)
 
-  res.json(User.transform(data))
+  if (users.length === 0) {
+    throw new NotFoundError('not found')
+  }
+
+  users = joinJs.mapOne(users, relationMaps, 'userMap', 'user_')
+
+  res.json(userTransformer(users))
 })
 
 const store = ex.createRoute(async (req, res) => {
@@ -50,7 +77,7 @@ const store = ex.createRoute(async (req, res) => {
 
   const passwordDigest = await bcrypt.hash(value.password, 10)
 
-  const user = await User.query()
+  let users = await knex('users')
     .insert({
       name: value.name,
       email: value.email,
@@ -58,7 +85,13 @@ const store = ex.createRoute(async (req, res) => {
     })
     .returning('*')
 
-  res.json(User.transform(user))
+  if (users.length === 0) {
+    throw new NotFoundError('not found')
+  }
+
+  users = joinJs.mapOne(users, relationMaps, 'userMap', '')
+
+  res.json(userTransformer(users))
 })
 
 const update = ex.createRoute(async (req, res) => {
@@ -68,21 +101,46 @@ const update = ex.createRoute(async (req, res) => {
     options.context.validatePassword = true
   }
 
-  const value = await userSchema.validate(req.body, options)
+  let value = await userSchema.validate(req.body, options)
 
-  const user = await User.query().patchAndFetchById(req.params.id, value)
+  if (value.password) {
+    value.password_digest = bcrypt.hashSync(value.password, 10)
+    delete value.password
+  }
 
-  res.json(User.transform(user))
+  const { id } = req.params
+
+  let users = await knex('users')
+    .whereNull('deleted_at')
+    .where('id', id)
+    .update({ ...value, updated_at: new Date().toISOString() })
+    .returning('*')
+
+  if (users.length === 0) {
+    throw new NotFoundError('not found')
+  }
+
+  users = joinJs.mapOne(users, relationMaps, 'userMap', '')
+
+  res.json(userTransformer(users))
 })
 
 const destroy = ex.createRoute(async (req, res) => {
   const { id } = req.params
 
-  const user = await User.query().patchAndFetchById(id, {
-    deleted_at: new Date().toISOString()
-  })
+  let users = await knex('users')
+    .whereNull('deleted_at')
+    .where('id', id)
+    .update({ deleted_at: new Date().toISOString() })
+    .returning('*')
 
-  res.json(User.transform(user))
+  if (users.length === 0) {
+    throw new NotFoundError('not found')
+  }
+
+  users = joinJs.mapOne(users, relationMaps, 'userMap', '')
+
+  res.json(userTransformer(users))
 })
 
 module.exports = {
