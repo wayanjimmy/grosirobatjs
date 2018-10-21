@@ -26,7 +26,7 @@ function createApp() {
 
   app.use(paginate.middleware(5, 50))
 
-  const root = path.join(__dirname, '/../public')
+  const root = path.join(__dirname, '../public')
 
   const router = createRouter()
   app.use('/api', router)
