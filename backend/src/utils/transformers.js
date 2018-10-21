@@ -1,3 +1,8 @@
+const userTransformer = user => ({
+  object: 'user',
+  ...user
+})
+
 const productTransformer = product => {
   const transform = {
     object: 'product',
@@ -26,6 +31,7 @@ const variantTransformer = variant => ({
 })
 
 module.exports = {
+  userTransformer,
   productTransformer,
   categoryTransformer,
   variantTransformer

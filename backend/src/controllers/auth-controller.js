@@ -1,36 +1,40 @@
 const bcrypt = require('bcrypt')
-const _ = require('lodash')
+const knex = require('knex')(require('../config/knexfile'))
+const joinJs = require('join-js').default
 
 const ex = require('../utils/express')
-const { User } = require('../models')
 const { loginSchema } = require('../schemas')
 const { ValidationError } = require('../utils/errors')
 const { generateJWTforUser } = require('../utils/auth')
+const transformers = require('../utils/transformers')
+const { relationMaps, userFields, getSelect } = require('../utils/db')
 
 const login = ex.createRoute(async (req, res) => {
   const value = await loginSchema.validate(req.body, { abortEarly: false })
 
-  let user = await User.query()
-    .where({
-      email: value.email
-    })
+  let user = await knex('users')
+    .select(...getSelect('users', 'user', userFields))
+    .where('email', value.email)
     .first()
 
   if (!user) {
     throw new ValidationError(['is invalid'], '', 'email or password')
   }
 
-  const isValid = await bcrypt.compare(value.password, user.password_digest)
+  const isValid = await bcrypt.compare(
+    value.password,
+    user.user_password_digest
+  )
 
   if (!isValid) {
     throw new ValidationError(['is invalid'], '', 'email or password')
   }
 
-  user = generateJWTforUser(User.transform(user))
+  user = joinJs.mapOne([user], relationMaps, 'userMap', 'user_')
 
-  res.json(
-    _.omit(user, ['password_digest', 'deleted_at', 'created_at', 'updated_at'])
-  )
+  user = generateJWTforUser(user)
+
+  res.json(transformers.userTransformer(user))
 })
 
 module.exports = {
