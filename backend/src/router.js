@@ -42,6 +42,7 @@ function createRouter() {
   )
 
   router.get('/products', authMiddleware.required, products.index)
+  router.get('/products/:id', authMiddleware.required, products.show)
 
   return router
 }

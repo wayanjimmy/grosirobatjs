@@ -2,19 +2,29 @@ const productFields = ['id', 'name', 'category_id']
 
 const categoryFields = ['id', 'name']
 
+const variantFields = ['id', 'price', 'unit_of_measure', 'scaled_quantity']
+
 const relationMaps = [
   {
     mapId: 'productMap',
     idProperty: 'id',
-    properties: ['name'],
+    properties: ['name', 'variants_count'],
     associations: [
       { name: 'category', mapId: 'categoryMap', columnPrefix: 'category_' }
+    ],
+    collections: [
+      { name: 'variants', mapId: 'variantMap', columnPrefix: 'variant_' }
     ]
   },
   {
     mapId: 'categoryMap',
     idProperty: 'id',
     properties: ['name']
+  },
+  {
+    mapId: 'variantMap',
+    idProperty: 'id',
+    properties: ['price', 'scaled_quantity', 'unit_of_measure']
   }
 ]
 
@@ -26,5 +36,6 @@ module.exports = {
   getSelect,
   productFields,
   relationMaps,
-  categoryFields
+  categoryFields,
+  variantFields
 }

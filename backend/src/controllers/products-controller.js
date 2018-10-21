@@ -8,22 +8,31 @@ const {
   getSelect,
   productFields,
   categoryFields,
+  variantFields,
   relationMaps
 } = require('../utils/db')
 
+const variantsCountQuery = knex('variants')
+  .count('*')
+  .where('product_id', knex.raw('??', ['products.id']))
+  .as('product_variants_count')
+
+let productsQuery = knex
+  .select(
+    ...getSelect('products', 'product', productFields),
+    ...getSelect('categories', 'category', categoryFields),
+    variantsCountQuery
+  )
+  .from('products')
+  .leftJoin('categories', 'products.category_id', 'categories.id')
+  .whereNull('products.deleted_at')
+
 const index = ex.createRoute(async (req, res) => {
   const keyword = _.defaultTo(req.search, '')
+  const { limit } = req.query
+  const { skip: offset } = req
 
-  let productsQuery = knex
-    .select(
-      ...getSelect('products', 'product', productFields),
-      ...getSelect('categories', 'category', categoryFields)
-    )
-    .from('products')
-    .leftJoin('categories', 'products.category_id', 'categories.id')
-    .limit(req.query.limit)
-    .offset(req.skip)
-    .whereNull('products.deleted_at')
+  productsQuery = productsQuery.limit(limit).offset(offset)
 
   let countQuery = knex('products').whereNull('deleted_at')
 
@@ -38,18 +47,17 @@ const index = ex.createRoute(async (req, res) => {
 
   products = joinJs
     .map(products, relationMaps, 'productMap', 'product_')
-    .map(product => ({
+    .map(({ variants, ...product }) => ({
       object: 'product',
       ...product,
+      variants_count: Number(product.variants_count),
       category: {
         object: 'category',
         ...product.category
       }
     }))
 
-  const total = countRes.count
-
-  const pageCount = Math.ceil(total / req.query.limit)
+  const pageCount = Math.ceil(countRes.count / limit)
 
   res.json({
     object: 'list',
@@ -58,6 +66,38 @@ const index = ex.createRoute(async (req, res) => {
   })
 })
 
+const show = ex.createRoute(async (req, res) => {
+  const { id } = req.params
+  const products = await productsQuery.where('products.id', id)
+
+  const variantRelations = await knex('variants')
+    .select(...getSelect('variants', 'variant', variantFields))
+    .where('product_id', id)
+
+  let variantList = []
+
+  if (variantRelations && variantRelations.length > 0) {
+    variantList = joinJs.map(
+      variantRelations,
+      relationMaps,
+      'variantMap',
+      'variant_'
+    )
+  }
+
+  const product = joinJs.mapOne(
+    products,
+    relationMaps,
+    'productMap',
+    'product_'
+  )
+
+  product.variants = variantList
+
+  res.json(product)
+})
+
 module.exports = {
-  index
+  index,
+  show
 }

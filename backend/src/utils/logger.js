@@ -1,13 +1,13 @@
 //@ts-check
 
 const { format, transports, createLogger } = require('winston')
-const path = require('path')
+// const path = require('path')
 const _ = require('lodash')
 
 const config = require('../config')
 
 function log(filePath) {
-  const filename = path.basename(filePath)
+  // const filename = path.basename(filePath)
 
   const logger = createLogger({
     transports: [
@@ -17,8 +17,8 @@ function log(filePath) {
           format.timestamp(),
           format.simple()
         )
-      }),
-      new transports.File({ filename })
+      })
+      // new transports.File({ filename })
     ]
   })
 
