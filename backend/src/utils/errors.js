@@ -1,7 +1,8 @@
 const { ValidationError } = require('yup')
-const { NotFoundError } = require('objection')
+
+class NotFoundError extends Error {}
 
 module.exports = {
-  ValidationError,
-  NotFoundError
+  ValidationError, // 422
+  NotFoundError // 404
 }
