@@ -1,43 +1,73 @@
 const paginate = require('express-paginate')
 const _ = require('lodash')
+const knex = require('knex')(require('../config/knexfile'))
+const joinJs = require('join-js').default
 
 const ex = require('../utils/express')
-const { Distributor } = require('../models')
 const { distributorSchema } = require('../schemas')
+const { getSelect, relationMaps, distributorFields } = require('../utils/db')
+const { distributorTransformer } = require('../utils/transformers')
+const { NotFoundError } = require('../utils/errors')
+
+const distributorQuery = () =>
+  knex('distributors')
+    .select(...getSelect('distributors', 'distributor', distributorFields))
+    .whereNull('deleted_at')
 
 const index = ex.createRoute(async (req, res) => {
   const keyword = _.defaultTo(req.query.search, '')
+  const { limit } = req.query
+  const { skip: offset } = req
 
-  let distributorQuery = Distributor.query()
-    .whereNull('deleted_at')
+  let q = distributorQuery()
+    .limit(limit)
+    .offset(offset)
     .orderBy('created_at', 'ASC')
-    .range(req.skip, req.skip + req.query.limit - 1)
+
+  let countQ = knex('distributors').whereNull('deleted_at')
 
   if (keyword.length > 0) {
-    distributorQuery = distributorQuery.where('name', 'ilike', `%${keyword}%`)
+    q = q.where('name', 'ilike', `%${keyword}%`)
+    countQ = countQ.where('name', 'ilike', `%${keyword}%`)
   }
 
-  const { results: data, total } = await distributorQuery
+  countQ = countQ.count()
 
-  const pageCount = Math.ceil(total / req.query.limit)
+  let [distributors, [countRes]] = await Promise.all([q, countQ])
+
+  distributors = joinJs.map(
+    distributors,
+    relationMaps,
+    'distributorMap',
+    'distributor_'
+  )
+
+  const pageCount = Math.ceil(countRes.count / limit)
 
   res.json({
     object: 'list',
     has_more: paginate.hasNextPages(req)(pageCount),
-    data: data.map(distributor => Distributor.transform(distributor))
+    data: distributors.map(distributor => distributorTransformer(distributor))
   })
 })
 
 const show = ex.createRoute(async (req, res) => {
   const { id } = req.params
 
-  const distributor = await Distributor.query()
-    .whereNull('deleted_at')
-    .where('id', id)
-    .first()
-    .throwIfNotFound()
+  let distributors = await distributorQuery().where('id', id)
 
-  res.json(Distributor.transform(distributor))
+  if (distributors.length === 0) {
+    throw new NotFoundError('not found')
+  }
+
+  distributors = joinJs.mapOne(
+    distributors,
+    relationMaps,
+    'distributorMap',
+    'distributor_'
+  )
+
+  res.json(distributorTransformer(distributors))
 })
 
 const store = ex.createRoute(async (req, res) => {
@@ -45,11 +75,13 @@ const store = ex.createRoute(async (req, res) => {
     abortEarly: false
   })
 
-  const distributor = await Distributor.query()
+  let distributors = await knex('distributors')
     .insert(value)
     .returning('*')
 
-  res.json(Distributor.transform(distributor))
+  distributors = joinJs.mapOne(distributors, relationMaps, 'distributorMap', '')
+
+  res.json(distributorTransformer(distributors))
 })
 
 const update = ex.createRoute(async (req, res) => {
@@ -59,19 +91,29 @@ const update = ex.createRoute(async (req, res) => {
 
   const { id } = req.params
 
-  const distributor = await Distributor.query().patchAndFetchById(id, value)
+  let distributors = await knex('distributors')
+    .whereNull('deleted_at')
+    .where('id', id)
+    .update(value)
+    .returning('*')
 
-  res.json(Distributor.transform(distributor))
+  distributors = joinJs.mapOne(distributors, relationMaps, 'distributorMap', '')
+
+  res.json(distributorTransformer(distributors))
 })
 
 const destroy = ex.createRoute(async (req, res) => {
   const { id } = req.params
 
-  const distributor = await Distributor.query().patchAndFetchById(id, {
-    deleted_at: new Date().toISOString()
-  })
+  let distributors = await knex('distributors')
+    .whereNull('deleted_at')
+    .where('id', id)
+    .update({ deleted_at: new Date().toISOString() })
+    .returning('*')
 
-  res.json(Distributor.transform(distributor))
+  distributors = joinJs.mapOne(distributors, relationMaps, 'distributorMap', '')
+
+  res.json(distributorTransformer(distributors))
 })
 
 module.exports = {

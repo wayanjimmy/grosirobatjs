@@ -3,6 +3,11 @@ const userTransformer = user => ({
   ...user
 })
 
+const distributorTransformer = distributor => ({
+  object: 'distributor',
+  ...distributor
+})
+
 const productTransformer = product => {
   const transform = {
     object: 'product',
@@ -34,5 +39,6 @@ module.exports = {
   userTransformer,
   productTransformer,
   categoryTransformer,
-  variantTransformer
+  variantTransformer,
+  distributorTransformer
 }

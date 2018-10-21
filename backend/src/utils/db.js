@@ -1,5 +1,7 @@
 const userFields = ['id', 'name', 'email', 'password_digest']
 
+const distributorFields = ['id', 'name']
+
 const productFields = ['id', 'name', 'category_id']
 
 const categoryFields = ['id', 'name']
@@ -11,6 +13,11 @@ const relationMaps = [
     mapId: 'userMap',
     idProperty: 'id',
     properties: ['name', 'email']
+  },
+  {
+    mapId: 'distributorMap',
+    idProperty: 'id',
+    properties: ['name']
   },
   {
     mapId: 'productMap',
@@ -45,5 +52,6 @@ module.exports = {
   relationMaps,
   categoryFields,
   variantFields,
-  userFields
+  userFields,
+  distributorFields
 }
