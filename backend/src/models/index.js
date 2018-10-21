@@ -74,17 +74,6 @@ class Variant extends Model {
     return 'variants'
   }
 
-  static relationMappings = {
-    product: {
-      relation: Model.BelongsToOneRelation,
-      modelClass: Product,
-      join: {
-        from: 'variants.product_id',
-        to: 'products.id'
-      }
-    }
-  }
-
   static transform({
     id,
     product_id,

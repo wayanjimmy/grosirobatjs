@@ -9,6 +9,7 @@ const config = require('./config')
 const createRouter = require('./router')
 const errorLogger = require('./middlewares/error-logger')()
 const errorResponder = require('./middlewares/error-responder')()
+const logger = require('./utils/logger')(__filename)
 
 function createApp() {
   const app = express()
@@ -30,6 +31,8 @@ function createApp() {
 
   const router = createRouter()
   app.use('/api', router)
+
+  logger.info(root)
 
   app.use('/', express.static(root))
   app.use(fallback('index.html', { root }))
