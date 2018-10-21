@@ -1,46 +1,66 @@
 const _ = require('lodash')
+const knex = require('knex')(require('../config/knexfile'))
+const joinJs = require('join-js').default
 
 const ex = require('../utils/express')
-const { Category } = require('../models')
 const { categorySchema } = require('../schemas')
+const { relationMaps, categoryFields, getSelect } = require('../utils/db')
+const { categoryTransformer } = require('../utils/transformers')
+const { NotFoundError } = require('../utils/errors')
+
+const categoryQuery = () =>
+  knex('categories')
+    .select(...getSelect('categories', 'category', categoryFields))
+    .whereNull('deleted_at')
 
 const index = ex.createRoute(async (req, res) => {
   const keyword = _.defaultTo(req.query.search, '')
 
-  let categoryQuery = Category.query()
-    .orderBy('created_at', 'ASC')
-    .whereNull('deleted_at')
+  let q = categoryQuery().orderBy('created_at', 'ASC')
 
   if (keyword.length > 0) {
-    categoryQuery = categoryQuery.where('name', 'ilike', `%${keyword}%`)
+    q = q.where('name', 'ilike', `%${keyword}%`)
   }
 
-  const data = await categoryQuery
+  let categories = await q
+
+  categories = joinJs.map(categories, relationMaps, 'categoryMap', 'category_')
 
   res.json({
     object: 'list',
-    data: data.map(category => Category.transform(category))
+    data: categories.map(category => categoryTransformer(category))
   })
 })
 
 const show = ex.createRoute(async (req, res) => {
   const { id } = req.params
 
-  const category = await Category.query()
-    .findById(id)
-    .throwIfNotFound()
+  const categories = await categoryQuery().where('id', id)
 
-  res.json(Category.transform(category))
+  if (categories.length === 0) {
+    throw new NotFoundError('not found')
+  }
+
+  const category = joinJs.mapOne(
+    categories,
+    relationMaps,
+    'categoryMap',
+    'category_'
+  )
+
+  res.json(categoryTransformer(category))
 })
 
 const store = ex.createRoute(async (req, res) => {
   const value = await categorySchema.validate(req.body, { abortEarly: false })
 
-  const category = await Category.query()
+  let categories = await knex('categories')
     .insert(value)
     .returning('*')
 
-  res.json(Category.transform(category))
+  category = joinJs.mapOne(categories, relationMaps, 'categoryMap', '')
+
+  res.json(categoryTransformer(category))
 })
 
 const update = ex.createRoute(async (req, res) => {
@@ -48,19 +68,31 @@ const update = ex.createRoute(async (req, res) => {
 
   const { id } = req.params
 
-  const category = await Category.query().patchAndFetchById(id, value)
+  let categories = await knex('categories')
+    .where('id', id)
+    .whereNull('deleted_at')
+    .update(value)
+    .returning('*')
 
-  res.json(Category.transform(category))
+  categories = joinJs.mapOne(categories, relationMaps, 'categoryMap', '')
+
+  res.json(categoryTransformer(categories))
 })
 
 const destroy = ex.createRoute(async (req, res) => {
   const { id } = req.params
 
-  const category = await Category.query().patchAndFetchById(id, {
-    deleted_at: new Date().toISOString()
-  })
+  let categories = await knex('categories')
+    .whereNull('deleted_at')
+    .where('id', id)
+    .update({
+      deleted_at: new Date().toISOString()
+    })
+    .returning('*')
 
-  res.json(Category.transform(category))
+  categories = joinJs.mapOne(categories, relationMaps, 'categoryMap', '')
+
+  res.json(categoryTransformer(categories))
 })
 
 module.exports = {
