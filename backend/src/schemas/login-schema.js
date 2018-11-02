@@ -1,17 +1,20 @@
 const yup = require('yup')
 
-const loginSchema = yup.object().shape({
-  email: yup
-    .string()
-    .required()
-    .email()
-    .lowercase()
-    .trim(),
+const loginSchema = yup
+  .object()
+  .shape({
+    email: yup
+      .string()
+      .required()
+      .email()
+      .lowercase()
+      .trim(),
 
-  password: yup
-    .string()
-    .required()
-    .trim()
-})
+    password: yup
+      .string()
+      .required()
+      .trim()
+  })
+  .noUnknown()
 
 module.exports = loginSchema

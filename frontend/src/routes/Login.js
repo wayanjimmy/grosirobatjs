@@ -5,6 +5,7 @@ import { navigate } from '@reach/router'
 
 import * as authUtil from '../utils/auth'
 import { CurrentUserContext } from '../contexts'
+import Alert from '../views/Alert'
 
 class Login extends Component {
   componentDidMount() {
@@ -30,23 +31,34 @@ class Login extends Component {
               <Formik
                 initialValues={{ email: '', password: '' }}
                 onSubmit={async (values, actions) => {
-                  actions.setSubmitting(true)
-                  const res = await axios.post('/auth/login', values)
-                  const { data: user } = res
-                  authUtil.setCurrentUser(user)
-                  setCurrentUser(user)
-                  actions.setSubmitting(false)
-                  navigate('/')
+                  try {
+                    actions.setSubmitting(true)
+                    const res = await axios.post('/auth/login', values)
+                    const { data: user } = res
+                    authUtil.setCurrentUser(user)
+                    setCurrentUser(user)
+                    actions.setSubmitting(false)
+                    navigate('/')
+                  } catch (err) {
+                    const response = err.response.data.data
+                    const message = Object.keys(response).map(key => {
+                      return `${key}: ${response[key].join(',')}`
+                    })
+                    actions.setErrors({ message: message.join(',') })
+                    actions.setSubmitting(false)
+                  }
                 }}
                 render={({
                   values,
+                  errors,
                   isSubmitting,
                   handleChange,
                   handleSubmit
                 }) => (
                   <form onSubmit={handleSubmit}>
                     <fieldset className="uk-fieldset">
-                      <legend className="uk-legend">Login</legend>
+                      <legend className="uk-legend">Masuk</legend>
+                      {errors.message && <Alert danger>{errors.message}</Alert>}
                       <div className="uk-margin">
                         <div className="uk-inline uk-width-1-1">
                           <span

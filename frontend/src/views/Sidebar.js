@@ -53,6 +53,9 @@ const Sidebar = () => (
         <MenuItem to="/distributor-list" icon="album">
           Distributor
         </MenuItem>
+        <MenuItem to="/product-list" icon="grid">
+          Produk
+        </MenuItem>
       </ul>
     </div>
   </aside>
