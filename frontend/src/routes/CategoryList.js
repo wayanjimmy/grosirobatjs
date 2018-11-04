@@ -15,6 +15,14 @@ function initCategory() {
   }
 }
 
+function transformResponseToState(res) {
+  const { data: category } = res
+  return {
+    id: category.id,
+    name: category.name
+  }
+}
+
 class CategoryList extends Component {
   state = {
     category: initCategory(),
@@ -25,7 +33,12 @@ class CategoryList extends Component {
     this.setState({ category })
   }
 
-  handleDelete = (category, fetch) => {}
+  handleDelete = async (category, fetch) => {
+    if (window.confirm('Yakin menghapus?')) {
+      await axios.delete(`/categories/${category.id}`)
+      this.setState({ category: initCategory() }, fetch)
+    }
+  }
 
   render() {
     const { search, category } = this.state
@@ -99,10 +112,15 @@ class CategoryList extends Component {
                       onSubmit={async (values, actions) => {
                         actions.setSubmitting(true)
                         try {
-                          delete values.object
                           if (values.id) {
-                            await axios.put(`/categories/${values.id}`, values)
-                            fetch()
+                            const res = await axios.put(
+                              `/categories/${values.id}`,
+                              values
+                            )
+                            this.setState(
+                              { category: transformResponseToState(res) },
+                              fetch
+                            )
                           } else {
                             await axios.post('/categories', values)
                             this.setState({ category: initCategory() }, fetch)
@@ -110,7 +128,6 @@ class CategoryList extends Component {
                         } catch (err) {
                           actions.setErrors(err.response.data.data)
                         }
-
                         actions.setSubmitting(false)
                       }}
                       render={({

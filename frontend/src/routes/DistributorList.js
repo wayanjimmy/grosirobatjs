@@ -15,15 +15,30 @@ function initDistributor() {
   }
 }
 
+function transformResponseToState(res) {
+  const { data: distributor } = res
+  return {
+    id: distributor.id,
+    name: distributor.name
+  }
+}
+
 class DistributorList extends Component {
   state = {
     distributor: initDistributor(),
     search: ''
   }
 
-  handleEdit = distributor => {}
+  handleEdit = distributor => {
+    this.setState({ distributor })
+  }
 
-  handleDelete = (distributor, fetch) => {}
+  handleDelete = async (distributor, fetch) => {
+    if (window.confirm('Yakin menghapus?')) {
+      await axios.delete(`/distributors/${distributor.id}`)
+      this.setState({ distributor: initDistributor() }, fetch)
+    }
+  }
 
   render() {
     const { search, distributor } = this.state
@@ -101,11 +116,14 @@ class DistributorList extends Component {
                         actions.setSubmitting(true)
                         try {
                           if (values.id) {
-                            await axios.put(
+                            const res = await axios.put(
                               `/distributors/${values.id}`,
                               values
                             )
-                            fetch()
+                            this.setState(
+                              { distributor: transformResponseToState(res) },
+                              fetch
+                            )
                           } else {
                             await axios.post('/distributors', values)
                             this.setState(
@@ -116,7 +134,6 @@ class DistributorList extends Component {
                         } catch (err) {
                           actions.setErrors(err.response.data.data)
                         }
-
                         actions.setSubmitting(false)
                       }}
                       render={({
