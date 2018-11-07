@@ -13,6 +13,7 @@ const {
 } = require('../utils/db')
 const { NotFoundError } = require('../utils/errors')
 const transformers = require('../utils/transformers')
+const productSchema = require('../schemas/product-schema')
 
 const variantsCountQuery = () =>
   knex('variants')
@@ -101,7 +102,14 @@ const show = ex.createRoute(async (req, res) => {
   res.json(transformers.productTransformer(product))
 })
 
+const store = ex.createRoute(async (req, res) => {
+  const value = await productSchema.validate(req.body, { abortEarly: false })
+
+  knex.transaction(trx => {})
+})
+
 module.exports = {
   index,
-  show
+  show,
+  store
 }

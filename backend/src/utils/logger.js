@@ -1,24 +1,25 @@
 //@ts-check
 
 const { format, transports, createLogger } = require('winston')
-// const path = require('path')
 const _ = require('lodash')
+const path = require('path')
 
 const config = require('../config')
 
 function log(filePath) {
-  // const filename = path.basename(filePath)
+  const fileName = path.basename(filePath)
 
   const logger = createLogger({
     transports: [
       new transports.Console({
         format: format.combine(
+          format.label({ label: fileName }),
           format.colorize(),
           format.timestamp(),
           format.simple()
         )
-      })
-      // new transports.File({ filename })
+      }),
+      new transports.File({ filename: 'error.log' })
     ]
   })
 

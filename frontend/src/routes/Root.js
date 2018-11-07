@@ -29,6 +29,14 @@ const AsyncCategoryList = Loadable({
   loader: () => import('./CategoryList'),
   loading: Loading
 })
+const AsyncProductList = Loadable({
+  loader: () => import('./ProductList'),
+  loading: Loading
+})
+const AsyncManageProductForm = Loadable({
+  loader: () => import('./ManageProductForm'),
+  loading: Loading
+})
 
 class Root extends Component {
   state = {
@@ -89,6 +97,9 @@ class Root extends Component {
           <AsyncUserList path="/user-list" />
           <AsyncDistributorList path="/distributor-list" />
           <AsyncCategoryList path="/category-list" />
+          <AsyncProductList path="/product-list" />
+          <AsyncManageProductForm path="/products/new" />
+          <AsyncManageProductForm path="/products/:productId" />
         </Router>
       </CurrentUserContext.Provider>
     )

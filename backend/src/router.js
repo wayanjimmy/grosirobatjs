@@ -43,6 +43,7 @@ function createRouter() {
 
   router.get('/products', authMiddleware.required, products.index)
   router.get('/products/:id', authMiddleware.required, products.show)
+  router.post('/products', authMiddleware.required, products.store)
 
   return router
 }

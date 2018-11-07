@@ -11,7 +11,7 @@ function createErrorLogger(_opts) {
     logStackTrace: status => status >= 400 && status !== 503
   }
 
-  return function errorHandler(err, req, res, next) {
+  return function errorHandler(err, req, _res, next) {
     const status = err.status ? err.status : 500
     const logLevel = getLogLevel(status)
     const log = logger[logLevel]
