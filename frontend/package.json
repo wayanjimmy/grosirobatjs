@@ -12,6 +12,7 @@
     "react": "16.7.0-alpha.0",
     "react-dom": "16.7.0-alpha.0",
     "react-scripts": "2.1.1",
+    "react-select": "^2.1.1",
     "uikit": "^3.0.0-rc.23"
   },
   "scripts": {

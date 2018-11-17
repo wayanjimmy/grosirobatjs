@@ -48,6 +48,9 @@ function Sidebar() {
           <MenuItem to="/" icon="home">
             Home
           </MenuItem>
+          <MenuItem to="/product-list" icon="thumbnails">
+            Produk
+          </MenuItem>
         </ul>
       </div>
     </aside>

@@ -16,21 +16,17 @@ function LazyImport(Component) {
 }
 
 class PrivateRoute extends React.Component {
-  static contextType = UserContext
-
   render() {
     const { as: Comp, ...props } = this.props
 
-    if (this.context.user && this.context.user.id === '') {
-      return <Login />
-    }
-
-    return <Comp {...props} />
+    return authUtil.isAuthenticated() ? <Comp {...props} /> : <Login />
   }
 }
 
 const Login = LazyImport(() => import('./Login'))
 const Home = LazyImport(() => import('./Home'))
+const ProductList = LazyImport(() => import('./ProductList'))
+const ManageProductForm = LazyImport(() => import('./ManageProductForm'))
 
 const useOnMount = onMount =>
   useEffect(() => {
@@ -75,6 +71,8 @@ export default function Root() {
       <Router>
         <PrivateRoute as={Home} path="/" />
         <Login path="/login" />
+        <PrivateRoute as={ProductList} path="/product-list" />
+        <PrivateRoute as={ManageProductForm} path="/products/new" />
       </Router>
     </UserContext.Provider>
   )
