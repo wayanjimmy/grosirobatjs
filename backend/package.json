@@ -1,0 +1,32 @@
+{
+  "name": "express-knex-starter",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "backpack-core": "^0.8.2",
+    "bcrypt": "^3.0.2",
+    "body-parser": "^1.18.3",
+    "debug": "^4.1.0",
+    "dotenv-safe": "^6.1.0",
+    "express": "^4.16.4",
+    "express-history-api-fallback": "^2.2.1",
+    "express-jwt": "^5.3.1",
+    "express-promise-router": "^3.0.3",
+    "faker": "^4.1.0",
+    "jsonwebtoken": "^8.4.0",
+    "knex": "^0.15.2",
+    "lodash": "^4.17.11",
+    "morgan": "^1.9.1",
+    "objection": "^1.4.0",
+    "objection-db-errors": "^1.0.0",
+    "pg": "^7.6.1",
+    "server-destroy": "^1.0.1",
+    "yup": "^0.26.6"
+  },
+  "scripts": {
+    "knex": "npx knex --knexfile src/config/knexfile.js",
+    "dev": "backpack",
+    "build": "backpack build"
+  }
+}
