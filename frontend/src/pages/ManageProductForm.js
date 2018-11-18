@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react'
 import { Formik } from 'formik'
 
@@ -35,7 +36,8 @@ export default function ManageProductForm() {
             errors,
             isSubmitting,
             handleChange,
-            submitForm
+            submitForm,
+            setFieldValue
           }) => (
             <div className="uk-card uk-card-default uk-card-small uk-card-hover">
               <div className="uk-card-header">
@@ -96,12 +98,88 @@ export default function ManageProductForm() {
                         <thead>
                           <tr>
                             <th />
+                            <th>Harga</th>
+                            <th>Qty</th>
+                            <th>Satuan</th>
                           </tr>
                         </thead>
                         <tfoot>
-                          <tr>
-                            <td />
-                          </tr>
+                          {values.variants.map((variant, index) => (
+                            <tr key={index}>
+                              <td className="uk-text-center uk-text-middle">
+                                {index === 0 ? (
+                                  <a
+                                    className="uk-icon-link"
+                                    data-uk-icon="plus-circle"
+                                    data-uk-tooltip="Tambah"
+                                    onClick={() => {
+                                      const { variants } = values
+                                      variants.push(initVariant())
+                                      setFieldValue('variants', variants)
+                                    }}
+                                  >
+                                    {''}
+                                  </a>
+                                ) : (
+                                  <a
+                                    className="uk-icon-link uk-text-danger"
+                                    data-uk-icon="minus-circle"
+                                    data-uk-tooltip="Hapus"
+                                    onClick={() => {
+                                      let { variants } = values
+                                      variants = variants.filter(
+                                        (v, i) => i !== index
+                                      )
+                                      setFieldValue('variants', variants)
+                                    }}
+                                  >
+                                    {''}
+                                  </a>
+                                )}
+                              </td>
+                              <td>
+                                <InputText
+                                  type="number"
+                                  name={`price_${index}`}
+                                  placeholder="0"
+                                  value={variant.price}
+                                  onChange={e => {
+                                    setFieldValue(
+                                      `variants.${index}.price`,
+                                      e.target.value
+                                    )
+                                  }}
+                                />
+                              </td>
+                              <td>
+                                <InputText
+                                  type="number"
+                                  name={`scaled_quantity_${index}`}
+                                  placeholder="0"
+                                  value={variant.scaledQuantity}
+                                  onChange={e => {
+                                    setFieldValue(
+                                      `variants.${index}.scaledQuantity`,
+                                      e.target.value
+                                    )
+                                  }}
+                                />
+                              </td>
+                              <td>
+                                <InputText
+                                  name={`uom_${index}`}
+                                  placeholder="Pcs"
+                                  value={variant.uom}
+                                  onChange={e => {
+                                    setFieldValue(
+                                      `variants.${index}.uom`,
+                                      e.target.value
+                                    )
+                                  }}
+                                />
+                              </td>
+                            </tr>
+                          ))}
                         </tfoot>
                         <tbody>
                           <tr>
