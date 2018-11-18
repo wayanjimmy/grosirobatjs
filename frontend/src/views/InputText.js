@@ -1,49 +1,45 @@
-import React, { Component } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import cn from 'classnames'
 
-class InputText extends Component {
-  static propTypes = {
-    name: PropTypes.string.isRequired,
-    type: PropTypes.string.isRequired,
-    placeholder: PropTypes.string.isRequired,
-    value: PropTypes.any,
-    autoFocus: PropTypes.bool.isRequired,
-    onChange: PropTypes.func
-  }
+function InputText({
+  name,
+  type,
+  placeholder,
+  value,
+  className,
+  onChange,
+  autoFocus,
+  ...props
+}) {
+  return (
+    <input
+      id={name}
+      name={name}
+      type={type}
+      placeholder={placeholder}
+      value={value}
+      className={cn('uk-input', className)}
+      autoComplete="off"
+      onChange={onChange}
+      {...props}
+    />
+  )
+}
 
-  static defaultProps = {
-    type: 'text',
-    placeholder: '',
-    autoFocus: false
-  }
+InputText.propTypes = {
+  name: PropTypes.string.isRequired,
+  type: PropTypes.string.isRequired,
+  placeholder: PropTypes.string.isRequired,
+  value: PropTypes.any,
+  autoFocus: PropTypes.bool.isRequired,
+  onChange: PropTypes.func
+}
 
-  render() {
-    const {
-      name,
-      type,
-      placeholder,
-      value,
-      className,
-      onChange,
-      autoFocus,
-      ...restProps
-    } = this.props
-
-    return (
-      <input
-        id={name}
-        name={name}
-        type={type}
-        placeholder={placeholder}
-        value={value}
-        className={cn('uk-input', className)}
-        autoComplete="off"
-        onChange={onChange}
-        {...restProps}
-      />
-    )
-  }
+InputText.defaultProps = {
+  type: 'text',
+  placeholder: '',
+  autoFocus: false
 }
 
 export default InputText

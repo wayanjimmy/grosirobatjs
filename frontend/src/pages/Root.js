@@ -1,10 +1,11 @@
-import React, { Suspense, lazy, useState, useEffect } from 'react'
+import React, { Suspense, lazy, useState } from 'react'
 import { Router } from '@reach/router'
 import ky from 'ky'
 
 import { UserContext } from '../contexts'
 import * as authUtil from '../utils/auth'
 import Loading from '../views/Loading'
+import { useOnMount } from '../hooks'
 
 function LazyImport(Component) {
   const ComponentLoadable = lazy(Component)
@@ -15,23 +16,14 @@ function LazyImport(Component) {
   )
 }
 
-class PrivateRoute extends React.Component {
-  render() {
-    const { as: Comp, ...props } = this.props
-
-    return authUtil.isAuthenticated() ? <Comp {...props} /> : <Login />
-  }
+function PrivateRoute({ as: Comp, ...props }) {
+  return authUtil.isAuthenticated() ? <Comp {...props} /> : <Login />
 }
 
 const Login = LazyImport(() => import('./Login'))
 const Home = LazyImport(() => import('./Home'))
 const ProductList = LazyImport(() => import('./ProductList'))
 const ManageProductForm = LazyImport(() => import('./ManageProductForm'))
-
-const useOnMount = onMount =>
-  useEffect(() => {
-    onMount && onMount()
-  }, [])
 
 export default function Root() {
   const [user, setUser] = useState({

@@ -6,6 +6,7 @@ const config = require('../config')
 const auth = require('./auth')
 const authUtil = require('../utils/auth')
 const product = require('./product')
+const category = require('./category')
 const {
   ValidationError,
   NotFoundError,
@@ -36,6 +37,7 @@ router.post('/auth/login', auth.login)
 router.get('/auth/me', authMiddleware.required, auth.me)
 
 router.get('/products', authMiddleware.required, product.index)
+router.get('/categories', authMiddleware.required, category.index)
 
 router.get('*', async (_req, _res) => {
   const err = new Error('404 not found')

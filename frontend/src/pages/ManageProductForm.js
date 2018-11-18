@@ -5,6 +5,7 @@ import { Formik } from 'formik'
 import Layout from '../views/Layout'
 import InputText from '../views/InputText'
 import InputMessage from '../views/InputMessage'
+import InputCategorySelect from '../views/InputCategorySelect'
 
 function initVariant() {
   return {
@@ -20,7 +21,10 @@ function initProduct() {
     id: '',
     sku: '',
     name: '',
-    categoryId: '',
+    category: {
+      value: '',
+      label: ''
+    },
     variants: [initVariant()]
   }
 }
@@ -88,7 +92,14 @@ export default function ManageProductForm() {
                         >
                           Kategori
                         </label>
-                        <div className="uk-form-controls" />
+                        <div className="uk-form-controls">
+                          <InputCategorySelect
+                            value={values.category}
+                            onChange={option =>
+                              setFieldValue('category', option)
+                            }
+                          />
+                        </div>
                         <InputMessage error={errors.category_id} />
                       </div>
                     </div>
