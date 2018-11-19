@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { navigate } from '@reach/router'
 
 import Layout from '../views/Layout'
+import Paginator from '../views/Paginator'
 
 export default function ProductList() {
   const [search, setSearch] = useState('')
@@ -40,6 +41,58 @@ export default function ProductList() {
               </div>
             </div>
           </div>
+          <Paginator
+            url="/api/products"
+            params={{ search }}
+            render={({ items, getPaginationProps }) => (
+              <div className="uk-card-body uk-grid">
+                <div className="uk-width-1-1@l uk-width-1-1@s">
+                  <div>
+                    <table className="uk-table uk-table-hover uk-table-divider uk-table-middle uk-table-small">
+                      <thead>
+                        <tr>
+                          <th className="uk-text-right">Sku</th>
+                          <th>Nama</th>
+                          <th>Kategori</th>
+                          <th />
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {items.map(product => (
+                          <tr className="uk-visible-toggle" key={product.id}>
+                            <td className="uk-text-right">{product.sku}</td>
+                            <td>
+                              <div>{product.name}</div>
+                            </td>
+                            <td>{product.category.name}</td>
+                            <td className="uk-invisible-hover">
+                              <a
+                                className="uk-icon-link"
+                                data-uk-icon="pencil"
+                                data-uk-tooltip="Sunting"
+                                onClick={() => {}}
+                              >
+                                {''}
+                              </a>
+                              <a
+                                className="uk-icon-link uk-text-danger"
+                                data-uk-icon="trash"
+                                data-uk-tooltip="Hapus"
+                                onClick={() => {}}
+                              >
+                                {''}
+                              </a>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                    <Paginator.Pagination {...getPaginationProps()} />
+                  </div>
+                </div>
+              </div>
+            )}
+          />
         </div>
       </div>
     </Layout>

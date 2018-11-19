@@ -37,6 +37,8 @@ router.post('/auth/login', auth.login)
 router.get('/auth/me', authMiddleware.required, auth.me)
 
 router.get('/products', authMiddleware.required, product.index)
+router.post('/products', authMiddleware.required, product.store)
+
 router.get('/categories', authMiddleware.required, category.index)
 
 router.get('*', async (_req, _res) => {
