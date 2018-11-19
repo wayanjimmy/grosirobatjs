@@ -38,6 +38,8 @@ router.get('/auth/me', authMiddleware.required, auth.me)
 
 router.get('/products', authMiddleware.required, product.index)
 router.post('/products', authMiddleware.required, product.store)
+router.get('/products/:id', authMiddleware.required, product.show)
+router.put('/products/:id', authMiddleware.required, product.update)
 
 router.get('/categories', authMiddleware.required, category.index)
 

@@ -76,7 +76,9 @@ export default function ProductList() {
                                 className="uk-icon-link"
                                 data-uk-icon="pencil"
                                 data-uk-tooltip="Sunting"
-                                onClick={() => {}}
+                                onClick={() =>
+                                  navigate(`/products/${product.id}`)
+                                }
                               >
                                 {''}
                               </a>

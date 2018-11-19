@@ -35,8 +35,14 @@ const productSchema = yup
     variants: yup
       .array()
       .of(variant)
-      .required()
-      .min(1)
+      .when('$store', {
+        is: true,
+        then: yup
+          .array()
+          .of(variant)
+          .required()
+          .min(1)
+      })
   })
   .noUnknown()
 

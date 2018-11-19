@@ -46,6 +46,7 @@ export default function Root() {
         })
         setUser(user)
       } catch (error) {
+        console.log(error.response)
         if (error.response.status === 401) {
           authUtil.setCurrentUser(null)
           setUser({
@@ -65,6 +66,7 @@ export default function Root() {
         <Login path="/login" />
         <PrivateRoute as={ProductList} path="/product-list" />
         <PrivateRoute as={ManageProductForm} path="/products/new" />
+        <PrivateRoute as={ManageProductForm} path="/products/:product" />
       </Router>
     </UserContext.Provider>
   )

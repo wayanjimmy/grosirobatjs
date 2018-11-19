@@ -1,9 +1,11 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React from 'react'
+import React, { useState } from 'react'
 import { Formik } from 'formik'
 import { navigate } from '@reach/router'
+import UIkit from 'uikit'
 
 import ky from '../utils/api'
+import { useOnMount } from '../hooks'
 import Layout from '../views/Layout'
 import InputText from '../views/InputText'
 import InputMessage from '../views/InputMessage'
@@ -31,28 +33,74 @@ function initProduct() {
   }
 }
 
-export default function ManageProductForm() {
+function transformProductResponseIntoState(product) {
+  return {
+    id: product.id,
+    sku: product.sku,
+    name: product.name,
+    category: {
+      value: product.category.id,
+      label: product.category.name
+    },
+    variants: product.variants.map(variant => ({
+      id: variant.id,
+      price: variant.price,
+      scaledQuantity: variant.scaledQuantity,
+      uom: variant.uom
+    }))
+  }
+}
+
+export default function ManageProductForm(props) {
+  const [product, setProduct] = useState(initProduct())
+
+  const fetch = async productId => {
+    try {
+      const res = await ky.get(`/api/products/${productId}`).json()
+      setProduct(transformProductResponseIntoState(res.data))
+    } catch (error) {}
+  }
+
+  useOnMount(() => {
+    if (props.product) {
+      fetch(props.product)
+    }
+  })
+
   return (
     <Layout>
       <div className="uk-width-1-1@l">
         <Formik
-          initialValues={initProduct()}
+          initialValues={product}
+          enableReinitialize
           onSubmit={async (values, actions) => {
             actions.setSubmitting(true)
             values.categoryId = values.category.value
             try {
-              await ky.post('/api/products', { json: values }).json()
+              if (values.id === '') {
+                await ky.post('/api/products', { json: values }).json()
+
+                if (window.confirm('Lanjut tambah produk?')) {
+                  actions.resetForm()
+                } else {
+                  navigate('/product-list')
+                }
+              } else {
+                await ky
+                  .put(`/api/products/${values.id}`, { json: values })
+                  .json()
+                await UIkit.notification({
+                  message: 'Berhasil disimpan',
+                  status: 'primary',
+                  pos: 'top-right',
+                  timeout: 3000
+                })
+              }
             } catch (error) {
               const res = await error.response.json()
               actions.setErrors(res.details)
             }
             actions.setSubmitting(false)
-
-            if (window.confirm('Lanjut tambah produk?')) {
-              actions.resetForm()
-            } else {
-              navigate('/product-list')
-            }
           }}
           render={({
             values,

@@ -52,9 +52,10 @@ async function index({ query }, res) {
 }
 
 async function store(req, res) {
-  value = await productSchema.validate(req.body, { abortEarly: false })
-
-  console.log(value)
+  value = await productSchema.validate(req.body, {
+    abortEarly: false,
+    context: { store: true }
+  })
 
   const Knex = Product.knex()
 
@@ -82,7 +83,39 @@ async function store(req, res) {
   }
 }
 
+async function show(req, res) {
+  const { id } = req.params
+
+  const product = await Product.query()
+    .eager({
+      category: true
+    })
+    .where('id', id)
+    .first()
+    .throwIfNotFound()
+
+  const variants = await product.$relatedQuery('variants')
+  product.variants = variants
+
+  res.json({ data: product })
+}
+
+async function update(req, res) {
+  const { id } = req.params
+
+  const value = await productSchema.validate(req.body, {
+    abortEarly: false,
+    context: { store: false }
+  })
+
+  const product = await Product.query().patchAndFetchById(id, value)
+
+  res.json({ data: product })
+}
+
 module.exports = {
   index,
-  store
+  store,
+  show,
+  update
 }
