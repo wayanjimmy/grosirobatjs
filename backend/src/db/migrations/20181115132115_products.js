@@ -8,6 +8,10 @@ exports.up = knex => {
     t.integer('category_id')
       .unsigned()
       .notNullable()
+    t.integer('stock')
+      .unsigned()
+      .notNullable()
+      .defaultTo(0)
     t.timestamps(true, true)
 
     t.foreign('category_id')

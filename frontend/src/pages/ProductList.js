@@ -54,6 +54,8 @@ export default function ProductList() {
                           <th className="uk-text-right">Sku</th>
                           <th>Nama</th>
                           <th>Kategori</th>
+                          <th className="uk-text-right">Variant</th>
+                          <th className="uk-text-right">Stok</th>
                           <th />
                         </tr>
                       </thead>
@@ -65,6 +67,10 @@ export default function ProductList() {
                               <div>{product.name}</div>
                             </td>
                             <td>{product.category.name}</td>
+                            <td className="uk-text-right">
+                              {product.numberOfVariants}
+                            </td>
+                            <td className="uk-text-right">{product.stock}</td>
                             <td className="uk-invisible-hover">
                               <a
                                 className="uk-icon-link"

@@ -1,7 +1,9 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react'
 import { Formik } from 'formik'
+import { navigate } from '@reach/router'
 
+import ky from '../utils/api'
 import Layout from '../views/Layout'
 import InputText from '../views/InputText'
 import InputMessage from '../views/InputMessage'
@@ -35,6 +37,23 @@ export default function ManageProductForm() {
       <div className="uk-width-1-1@l">
         <Formik
           initialValues={initProduct()}
+          onSubmit={async (values, actions) => {
+            actions.setSubmitting(true)
+            values.categoryId = values.category.value
+            try {
+              await ky.post('/api/products', { json: values }).json()
+            } catch (error) {
+              const res = await error.response.json()
+              actions.setErrors(res.details)
+            }
+            actions.setSubmitting(false)
+
+            if (window.confirm('Lanjut tambah produk?')) {
+              actions.resetForm()
+            } else {
+              navigate('/product-list')
+            }
+          }}
           render={({
             values,
             errors,
@@ -100,7 +119,7 @@ export default function ManageProductForm() {
                             }
                           />
                         </div>
-                        <InputMessage error={errors.category_id} />
+                        <InputMessage error={errors.categoryId} />
                       </div>
                     </div>
                     <div className="uk-width-1-1">

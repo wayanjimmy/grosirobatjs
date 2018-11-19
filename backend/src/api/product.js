@@ -25,7 +25,12 @@ async function index({ query }, res) {
 
   let products = Product.query()
     .eager('category')
-    .select(query.select)
+    .select(
+      ...query.select,
+      Product.relatedQuery('variants')
+        .count()
+        .as('numberOfVariants')
+    )
     .orderBy(query.orderBy, 'desc')
     .page(query.page, query.pageSize)
 
@@ -48,6 +53,8 @@ async function index({ query }, res) {
 
 async function store(req, res) {
   value = await productSchema.validate(req.body, { abortEarly: false })
+
+  console.log(value)
 
   const Knex = Product.knex()
 
