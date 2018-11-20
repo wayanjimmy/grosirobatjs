@@ -9,7 +9,7 @@ const config = require('./index')
 
 const options = {
   client: 'pg',
-  connection: `${config.DB_URL}`,
+  connection: `${config.DATABASE_URL}`,
   migrations: {
     directory: join(ROOT, 'src/db/migrations'),
     tableName: 'migrations'
@@ -21,7 +21,7 @@ const options = {
   }
 }
 
-if (config.NODE_ENV !== 'production') {
+if (true) {
   options.seeds = {
     directory: join(ROOT, 'src/db/seeds')
   }
