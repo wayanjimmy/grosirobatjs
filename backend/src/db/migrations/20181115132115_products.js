@@ -1,9 +1,7 @@
 exports.up = knex => {
   return knex.schema.createTable('products', t => {
     t.increments('id').primary()
-    t.string('sku')
-      .notNullable()
-      .unique()
+    t.string('sku').notNullable()
     t.string('name').notNullable()
     t.integer('category_id')
       .unsigned()
