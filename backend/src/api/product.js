@@ -18,7 +18,6 @@ function getPageTotal(total, pageSize) {
 
 async function index({ query }, res) {
   query.page = Number(query.page) || 1
-  query.page -= 1
   query.pageSize = Number(query.pageSize) || PAGE_SIZE
   query.orderBy = query.orderBy || 'sku'
   query.select = await getDefaultSelect()
@@ -32,7 +31,7 @@ async function index({ query }, res) {
         .as('numberOfVariants')
     )
     .orderBy(query.orderBy, 'desc')
-    .page(query.page, query.pageSize)
+    .page(query.page - 1, query.pageSize)
 
   if (_.defaultTo(query.search, '').length > 0) {
     products = products.where('name', 'like', `%${query.search}%`)
@@ -43,7 +42,7 @@ async function index({ query }, res) {
   res.json({
     data: results,
     meta: {
-      page: query.page + 1,
+      page: query.page,
       total,
       pageSize: query.pageSize,
       pageTotal: getPageTotal(total, query.pageSize)

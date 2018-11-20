@@ -51,6 +51,9 @@ function Sidebar() {
           <MenuItem to="/product-list" icon="thumbnails">
             Produk
           </MenuItem>
+          <MenuItem to="/variant-list" icon="nut">
+            Variant
+          </MenuItem>
         </ul>
       </div>
     </aside>

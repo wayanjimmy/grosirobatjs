@@ -7,17 +7,8 @@ const auth = require('./auth')
 const authUtil = require('../utils/auth')
 const product = require('./product')
 const category = require('./category')
-const {
-  ValidationError,
-  NotFoundError,
-  UniqueViolationError,
-  NotNullViolationError,
-  ForeignKeyViolationError,
-  CheckViolationError,
-  ConstraintViolationError,
-  DataError,
-  DBError
-} = require('../errors')
+const variant = require('./variant')
+const errTypes = require('../errors')
 
 const authMiddleware = {
   required: jwt({
@@ -41,6 +32,8 @@ router.post('/products', authMiddleware.required, product.store)
 router.get('/products/:id', authMiddleware.required, product.show)
 router.put('/products/:id', authMiddleware.required, product.update)
 
+router.get('/variants', authMiddleware.required, variant.index)
+
 router.get('/categories', authMiddleware.required, category.index)
 
 router.get('*', async (_req, _res) => {
@@ -59,32 +52,32 @@ router.use(async (err, _req, res, _next) => {
 })
 
 function augmentObjectionError(err, res) {
-  if (err instanceof ValidationError) {
+  if (err instanceof errTypes.ValidationError) {
     err.status = 422
     err.code = 'VALIDATION_ERROR'
     err.details = formatValidationError(err)
-  } else if (err instanceof NotFoundError) {
+  } else if (err instanceof errTypes.NotFoundError) {
     err.status = 404
     err.code = 'NOT_FOUND'
-  } else if (err instanceof UniqueViolationError) {
+  } else if (err instanceof errTypes.UniqueViolationError) {
     err.status = 409
     err.code = 'UNIQUE_VIOLATION'
-  } else if (err instanceof NotNullViolationError) {
+  } else if (err instanceof errTypes.NotNullViolationError) {
     err.status = 400
     err.code = 'NOT_NULL_VIOLATION'
-  } else if (err instanceof ForeignKeyViolationError) {
+  } else if (err instanceof errTypes.ForeignKeyViolationError) {
     err.status = 409
     err.code = 'FOREIGN_KEY_VIOLATION'
-  } else if (err instanceof CheckViolationError) {
+  } else if (err instanceof errTypes.CheckViolationError) {
     err.status = 400
     err.code = 'CHECK_VIOLATION'
-  } else if (err instanceof ConstraintViolationError) {
+  } else if (err instanceof errTypes.ConstraintViolationError) {
     err.status = 409
     err.code = 'UNKNOWN_CONSTRAINT_VIOLATION'
-  } else if (err instanceof DataError) {
+  } else if (err instanceof errTypes.DataError) {
     err.status = 400
     err.code = 'UNKNOWN_DATA_ERROR'
-  } else if (err instanceof DBError) {
+  } else if (err instanceof errTypes.DBError) {
     err.status = 500
     err.code = 'UNKNOWN_DB_ERROR'
   }
