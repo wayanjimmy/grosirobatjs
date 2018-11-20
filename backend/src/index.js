@@ -1,4 +1,4 @@
-require('dotenv-safe').config()
+require('dotenv').config()
 const enableDestroy = require('server-destroy')
 
 const config = require('./config')

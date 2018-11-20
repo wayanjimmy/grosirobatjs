@@ -1,8 +1,7 @@
 const { resolve, join } = require('path')
 const ROOT = resolve(__dirname, '../../')
-require('dotenv-safe').config({
-  path: join(ROOT, '.env'),
-  example: join(ROOT, '.env.example')
+require('dotenv').config({
+  path: join(ROOT, '.env')
 })
 
 const config = require('./index')
