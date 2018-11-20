@@ -22,6 +22,7 @@
     "objection-db-errors": "^1.0.0",
     "pg": "^7.6.1",
     "server-destroy": "^1.0.1",
+    "winston": "^3.1.0",
     "yup": "^0.26.6"
   },
   "scripts": {

@@ -6,6 +6,7 @@ const fallback = require('express-history-api-fallback')
 
 const routerApi = require('./api/router')
 const config = require('./config')
+const errorLogger = require('./api/errorlog')
 
 function init() {
   const app = express()
@@ -26,6 +27,7 @@ function init() {
 
   app.use('/', express.static(publicPath))
   app.use(fallback('index.html', { root: publicPath }))
+  app.use(errorLogger)
 
   return app
 }

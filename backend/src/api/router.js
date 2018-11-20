@@ -9,6 +9,7 @@ const product = require('./product')
 const category = require('./category')
 const variant = require('./variant')
 const errTypes = require('../errors')
+const logger = require('../utils/logger')(__filename)
 
 const authMiddleware = {
   required: jwt({
@@ -46,7 +47,7 @@ router.use(async (err, _req, res, _next) => {
   augmentObjectionError(err)
 
   const { message, stack, code = null, status = null, details = {} } = err
-  console.error(stack)
+  logger.error(stack)
 
   res.status(Number(err.status) || 500).json({ message, code, status, details })
 })
