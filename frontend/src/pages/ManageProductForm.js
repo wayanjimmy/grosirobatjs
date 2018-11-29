@@ -34,7 +34,7 @@ function initProduct() {
 }
 
 function transformProductResponseIntoState(product) {
-  return {
+  const result = {
     id: product.id,
     sku: product.sku,
     name: product.name,
@@ -49,6 +49,12 @@ function transformProductResponseIntoState(product) {
       uom: variant.uom
     }))
   }
+
+  if (result.variants.length === 0) {
+    result.variants = [initVariant()]
+  }
+
+  return result
 }
 
 export default function ManageProductForm(props) {
@@ -179,6 +185,7 @@ export default function ManageProductForm(props) {
                             <th>Harga</th>
                             <th>Qty</th>
                             <th>Satuan</th>
+                            <th />
                           </tr>
                         </thead>
                         <tfoot>
@@ -255,6 +262,31 @@ export default function ManageProductForm(props) {
                                     )
                                   }}
                                 />
+                              </td>
+                              <td className="uk-text-center uk-text-middle">
+                                <a
+                                  className="uk-icon-link"
+                                  data-uk-icon="check"
+                                  data-uk-tooltip="Simpan"
+                                  onClick={async () => {
+                                    const currentVariant =
+                                      values.variants[index]
+                                    if (currentVariant.id === '') {
+                                      // TODO: insert
+                                    } else {
+                                      // TODO: update
+                                      const res = await ky
+                                        .put(
+                                          `/api/variants/${currentVariant.id}`,
+                                          { json: currentVariant }
+                                        )
+                                        .json()
+                                      console.log(res)
+                                    }
+                                  }}
+                                >
+                                  {''}
+                                </a>
                               </td>
                             </tr>
                           ))}

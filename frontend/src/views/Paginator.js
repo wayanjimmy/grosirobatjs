@@ -1,10 +1,10 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { Fragment, useState, useEffect } from 'react'
+import React, { Fragment } from 'react'
 import PropTypes from 'prop-types'
 import cn from 'classnames'
+import isEqual from 'lodash/isEqual'
 
 import ky from '../utils/api'
-import Loading from '../views/Loading'
 
 function buildQueryString(url, params, page, pageSize) {
   const q = new URLSearchParams()
@@ -33,56 +33,62 @@ function Pagination({ page, lastPage, handlePageChange }) {
   )
 }
 
-export default function Paginator({ url, render, params }) {
-  const [items, setItems] = useState([])
-  const [isLoading, setIsLoading] = useState(false)
-  const [page, setPage] = useState(1)
-  const [pageSize, setPageSize] = useState(10)
-  const [lastPage, setLastPage] = useState(1)
+export default class Paginator extends React.Component {
+  static Pagination = Pagination
+  state = {
+    items: [],
+    page: 1,
+    pageSize: 10,
+    lastPage: 1
+  }
 
-  const fetch = async () => {
-    setIsLoading(true)
+  fetch = async () => {
+    const { url, params } = this.props
     try {
       const res = await ky
-        .get(buildQueryString(url, params, page, pageSize))
+        .get(
+          buildQueryString(url, params, this.state.page, this.state.pageSize)
+        )
         .json()
-      setItems(res.data)
-      setPage(res.meta.page)
-      setPageSize(res.meta.pageSize)
-      setLastPage(res.meta.pageTotal)
+      const { page, pageSize, pageTotal: lastPage } = res.meta
+      this.setState({ items: res.data, page, pageSize, lastPage })
     } catch (error) {}
-
-    setIsLoading(false)
   }
 
-  const handlePageChange = page => {
-    setPage(page)
+  handlePageChange = page => {
+    this.setState({ page }, this.fetch)
   }
 
-  useEffect(fetch, [page, params])
-
-  if (isLoading) {
-    return <Loading fullWidth />
+  componentDidMount() {
+    this.fetch()
   }
 
-  return (
-    <Fragment>
-      {render({
-        items,
-        isLoading,
-        page,
-        getPaginationProps: (props = {}) => ({
-          ...props,
+  componentDidUpdate(prevProps) {
+    if (!isEqual(this.props.params, prevProps.params)) {
+      this.fetch()
+    }
+  }
+
+  render() {
+    const { items, page, lastPage } = this.state
+    const { render } = this.props
+    return (
+      <Fragment>
+        {render({
+          items,
+          fetch: this.fetch,
           page,
-          lastPage,
-          handlePageChange
-        })
-      })}
-    </Fragment>
-  )
+          getPaginationProps: (props = {}) => ({
+            ...props,
+            page,
+            lastPage,
+            handlePageChange: this.handlePageChange
+          })
+        })}
+      </Fragment>
+    )
+  }
 }
-
-Paginator.Pagination = Pagination
 
 Paginator.propTypes = {
   url: PropTypes.string.isRequired,

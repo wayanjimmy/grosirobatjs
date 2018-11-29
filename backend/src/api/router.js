@@ -34,6 +34,9 @@ router.get('/products/:id', authMiddleware.required, product.show)
 router.put('/products/:id', authMiddleware.required, product.update)
 
 router.get('/variants', authMiddleware.required, variant.index)
+router.post('/variants', authMiddleware.required, variant.store)
+router.put('/variants/:id', authMiddleware.required, variant.update)
+router.delete('/variants/:id', authMiddleware.required, variant.destroy)
 
 router.get('/categories', authMiddleware.required, category.index)
 

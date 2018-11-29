@@ -33,6 +33,8 @@ export default function Root() {
     email: ''
   })
 
+  useOnMount(() => (document.title = 'GrosirObat'))
+
   useOnMount(async () => {
     if (authUtil.isAuthenticated()) {
       try {

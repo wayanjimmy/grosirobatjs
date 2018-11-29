@@ -8,6 +8,7 @@ import Paginator from '../views/Paginator'
 import InputText from '../views/InputText'
 import InputMessage from '../views/InputMessage'
 import Price from '../views/Price'
+import ky from '../utils/api'
 
 function initVariant() {
   return {
@@ -26,6 +27,13 @@ export default function VariantList() {
     setVariant(pick(selectedVariant, ['id', 'price', 'scaledQuantity', 'uom']))
   }
 
+  const handleDelete = async (selectedVariant, fetch) => {
+    if (window.confirm(`Yakin menghapus?`)) {
+      await ky.delete(`/api/variants/${selectedVariant.id}`).json()
+      fetch()
+    }
+  }
+
   return (
     <Layout>
       <div className="uk-width-1-1@l">
@@ -39,7 +47,7 @@ export default function VariantList() {
                     className="uk-search-input"
                     type="search"
                     name="search"
-                    placeholder="Cari produk"
+                    placeholder="Cari variant"
                     defaultValue={search}
                     onKeyPress={e => {
                       if (e.key === 'Enter') {
@@ -55,7 +63,7 @@ export default function VariantList() {
           <Paginator
             url="/api/variants"
             params={{ search }}
-            render={({ items, getPaginationProps }) => (
+            render={({ items, fetch, getPaginationProps }) => (
               <div className="uk-card-body uk-grid">
                 <div className="uk-width-2-3@l uk-width-1-1@s">
                   <div>
@@ -171,7 +179,7 @@ export default function VariantList() {
                             className="uk-button uk-button-danger"
                             type="button"
                             disabled={!values.id}
-                            onClick={() => {}}
+                            onClick={() => handleDelete(variant, fetch)}
                           >
                             Hapus
                           </button>

@@ -1,6 +1,7 @@
 const _ = require('lodash')
 
 const Variant = require('../models/variant')
+const variantSchema = require('../schemas/variant')
 
 const PAGE_SIZE = 10
 
@@ -48,6 +49,43 @@ async function index({ query }, res) {
   })
 }
 
+async function store(req, res) {
+  const value = await variantSchema.validate(req.body, {
+    abortEarly: false,
+    context: { store: true }
+  })
+
+  const variant = await Variant.query().insert(value)
+
+  return res.json({ data: variant })
+}
+
+async function update(req, res) {
+  const { id } = req.params
+
+  const value = await variantSchema.validate(req.body, { abortEarly: false })
+
+  const variant = await Variant.query().patchAndFetchById(id, value)
+
+  res.json({ data: variant })
+}
+
+async function destroy(req, res) {
+  const { id } = req.params
+
+  const variant = await Variant.query()
+    .delete()
+    .where({ id })
+    .first()
+    .throwIfNotFound()
+    .returning('*')
+
+  res.json({ data: variant })
+}
+
 module.exports = {
-  index
+  index,
+  store,
+  update,
+  destroy
 }
