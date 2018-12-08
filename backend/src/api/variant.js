@@ -31,7 +31,7 @@ async function index({ query }, res) {
     variants = variants.whereIn('product_id', builder => {
       builder
         .select('id')
-        .where('name', 'like', `%${query.search}%`)
+        .where('name', 'ilike', `%${query.search}%`)
         .from('products')
     })
   }

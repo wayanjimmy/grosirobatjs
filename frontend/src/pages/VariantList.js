@@ -2,6 +2,7 @@
 import React, { useState } from 'react'
 import { Formik } from 'formik'
 import pick from 'lodash/pick'
+import UIkit from 'uikit'
 
 import Layout from '../views/Layout'
 import Paginator from '../views/Paginator'
@@ -15,7 +16,8 @@ function initVariant() {
     id: '',
     price: 0,
     scaledQuantity: 0,
-    uom: ''
+    uom: '',
+    productId: null
   }
 }
 
@@ -24,7 +26,15 @@ export default function VariantList() {
   const [variant, setVariant] = useState(initVariant())
 
   const handleEdit = selectedVariant => {
-    setVariant(pick(selectedVariant, ['id', 'price', 'scaledQuantity', 'uom']))
+    setVariant(
+      pick(selectedVariant, [
+        'id',
+        'price',
+        'scaledQuantity',
+        'uom',
+        'productId'
+      ])
+    )
   }
 
   const handleDelete = async (selectedVariant, fetch) => {
@@ -109,6 +119,20 @@ export default function VariantList() {
                     enableReinitialize
                     onSubmit={async (values, actions) => {
                       actions.setSubmitting(true)
+                      try {
+                        await ky.put(`/api/variants/${values.id}`, {
+                          json: values
+                        })
+                        UIkit.notification({
+                          message: 'Berhasil disimpan',
+                          status: 'primary',
+                          pos: 'top-right',
+                          timeout: 3000
+                        })
+                      } catch (error) {
+                        const res = await error.response.json()
+                        actions.setErrors(res.details)
+                      }
                       actions.setSubmitting(false)
                     }}
                     render={({

@@ -98,7 +98,7 @@ function Login() {
                 <div className="uk-margin">
                   <button
                     type="submit"
-                    className="uk-button uk-button-primary uk-button-primary uk-button-large uk-width-1-1"
+                    className="uk-button uk-button-primary uk-button-large uk-width-1-1"
                     disabled={isSubmitting}
                   >
                     {isSubmitting ? 'Proses..' : 'Masuk'}

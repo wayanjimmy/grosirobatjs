@@ -25,6 +25,7 @@ const Home = LazyImport(() => import('./Home'))
 const ProductList = LazyImport(() => import('./ProductList'))
 const ManageProductForm = LazyImport(() => import('./ManageProductForm'))
 const VariantList = LazyImport(() => import('./VariantList'))
+const Pos = LazyImport(() => import('./Pos'))
 
 export default function Root() {
   const [user, setUser] = useState({
@@ -71,6 +72,7 @@ export default function Root() {
         <PrivateRoute as={ManageProductForm} path="/products/new" />
         <PrivateRoute as={ManageProductForm} path="/products/:product" />
         <PrivateRoute as={VariantList} path="/variant-list" />
+        <PrivateRoute as={Pos} path="/pos" />
       </Router>
     </UserContext.Provider>
   )
