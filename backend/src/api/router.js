@@ -8,6 +8,7 @@ const authUtil = require('../utils/auth')
 const product = require('./product')
 const category = require('./category')
 const variant = require('./variant')
+const order = require('./order')
 const errTypes = require('../errors')
 const logger = require('../utils/logger')(__filename)
 
@@ -39,6 +40,9 @@ router.put('/variants/:id', authMiddleware.required, variant.update)
 router.delete('/variants/:id', authMiddleware.required, variant.destroy)
 
 router.get('/categories', authMiddleware.required, category.index)
+
+router.get('/orders', authMiddleware.required, order.index)
+router.post('/orders', authMiddleware.required, order.store)
 
 router.get('*', async (_req, _res) => {
   const err = new Error('404 not found')
