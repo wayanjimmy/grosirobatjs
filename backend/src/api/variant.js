@@ -63,7 +63,10 @@ async function store(req, res) {
 async function update(req, res) {
   const { id } = req.params
 
-  const value = await variantSchema.validate(req.body, { abortEarly: false })
+  const value = await variantSchema.validate(req.body, {
+    abortEarly: false,
+    context: { store: false }
+  })
 
   const variant = await Variant.query().patchAndFetchById(id, value)
 

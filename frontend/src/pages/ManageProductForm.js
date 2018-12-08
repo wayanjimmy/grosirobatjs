@@ -272,17 +272,29 @@ export default function ManageProductForm(props) {
                                     const currentVariant =
                                       values.variants[index]
                                     if (currentVariant.id === '') {
-                                      // TODO: insert
+                                      await ky.post(
+                                        `/api/variants/${currentVariant.id}`,
+                                        {
+                                          json: {
+                                            ...currentVariant,
+                                            productId: product.id
+                                          }
+                                        }
+                                      )
                                     } else {
-                                      // TODO: update
-                                      const res = await ky
+                                      await ky
                                         .put(
                                           `/api/variants/${currentVariant.id}`,
                                           { json: currentVariant }
                                         )
                                         .json()
-                                      console.log(res)
                                     }
+                                    UIkit.notification({
+                                      message: 'Berhasil disimpan',
+                                      status: 'primary',
+                                      pos: 'top-right',
+                                      timeout: 3000
+                                    })
                                   }}
                                 >
                                   {''}

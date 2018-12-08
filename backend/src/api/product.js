@@ -35,7 +35,7 @@ async function index({ query }, res) {
     .page(query.page - 1, query.pageSize)
 
   if (_.defaultTo(query.search, '').length > 0) {
-    products = products.where('name', 'like', `%${query.search}%`)
+    products = products.where('name', 'ilike', `%${query.search}%`)
   }
 
   const { results, total } = await products
