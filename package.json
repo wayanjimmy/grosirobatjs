@@ -2,12 +2,12 @@
     "name": "grosirobatjs",
     "license": "MIT",
     "engines": {
-        "node": "10.13.0",
+        "node": "10.14.1",
         "yarn": "1.12.3"
     },
     "scripts": {
         "build": "yarn --cwd frontend install && yarn --cwd frontend build && yarn --cwd backend install && yarn --cwd backend build",
-        "deploy": "cp -a frontend/build/. public/ && cp backend/.env.example backend/build/",
+        "deploy": "cp -a frontend/build/. public/",
         "heroku-postbuild": "yarn build && yarn deploy"
     }
 }
