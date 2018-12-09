@@ -2,11 +2,6 @@
 
 Grosirobat Fullstack JS
 
-```
-username : admin@grosirobat.com
-pass : secret
-```
-
 ### Demo
 
 | URL | http://grosirobatjs.herokuapp.com/ |
