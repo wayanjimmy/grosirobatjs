@@ -43,6 +43,7 @@ router.get('/categories', authMiddleware.required, category.index)
 
 router.get('/orders', authMiddleware.required, order.index)
 router.post('/orders', authMiddleware.required, order.store)
+router.get('/orders/:no', authMiddleware.required, order.show)
 
 router.get('*', async (_req, _res) => {
   const err = new Error('404 not found')

@@ -5,6 +5,18 @@ const orderSchema = require('../schemas/order')
 const Order = require('../models/order')
 const Variant = require('../models/variant')
 
+const PAGE_SIZE = 10
+
+async function getDefaultSelect() {
+  const { columns } = await Order.fetchTableMetadata()
+  const set = new Set(columns)
+  return [...set]
+}
+
+function getPageTotal(total, pageSize) {
+  return Math.ceil(total / pageSize)
+}
+
 async function generateOrderNo() {
   let d = new Date()
   let prefix =
@@ -29,7 +41,51 @@ async function generateOrderNo() {
   return false
 }
 
-async function index(req, res) {}
+async function index({ query }, res) {
+  query.page = Number(query.page) || 1
+  query.pageSize = Number(query.pageSize) || PAGE_SIZE
+  query.orderBy = query.orderBy || 'orders.createdAt'
+  query.select = await getDefaultSelect()
+
+  let orders = Order.query()
+    .select(query.select)
+    .orderBy(query.orderBy, 'desc')
+    .page(query.page - 1, query.pageSize)
+
+  if (_.defaultTo(query.search, '').length > 0) {
+    orders = orders
+      .where('no', 'ilike', `%${query.search}%`)
+      .orWhere('customerName', 'ilike', `%${query.search}%`)
+  }
+
+  const { results, total } = await orders
+
+  res.json({
+    data: results,
+    meta: {
+      page: query.page,
+      total,
+      pageSize: query.pageSize,
+      pageTotal: getPageTotal(total, query.pageSize)
+    }
+  })
+}
+
+async function show(req, res) {
+  const { no } = req.params
+
+  const order = await Order.query()
+    .where({ no })
+    .first()
+    .throwIfNotFound()
+
+  const items = await order
+    .$relatedQuery('items')
+    .eager('[variant, variant.product]')
+  order.items = items
+
+  res.json({ data: order })
+}
 
 async function store(req, res) {
   const value = await orderSchema.validate(req.body, { abortEarly: false })
@@ -74,5 +130,6 @@ async function store(req, res) {
 
 module.exports = {
   index,
+  show,
   store
 }

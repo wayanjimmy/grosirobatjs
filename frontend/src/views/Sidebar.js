@@ -1,5 +1,4 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-
 import React, { useContext } from 'react'
 import { Link, Match } from '@reach/router'
 import cn from 'classnames'
@@ -53,6 +52,9 @@ function Sidebar() {
           </MenuItem>
           <MenuItem to="/variant-list" icon="nut">
             Variant
+          </MenuItem>
+          <MenuItem to="/order-list" icon="file-text">
+            Penjualan
           </MenuItem>
           <MenuItem to="/pos" icon="cart">
             POS
