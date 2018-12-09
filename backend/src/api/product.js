@@ -1,7 +1,6 @@
 const { transaction } = require('objection')
 const _ = require('lodash')
 
-const logger = require('../utils/logger')(__filename)
 const Product = require('../models/product')
 const productSchema = require('../schemas/product')
 
@@ -76,10 +75,7 @@ async function store(req, res) {
     res.json({ data: product })
   } catch (error) {
     await trx.rollback()
-
-    logger.error(error)
-
-    throw new Error('something wrong')
+    throw error
   }
 }
 

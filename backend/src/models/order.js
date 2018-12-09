@@ -12,7 +12,7 @@ class Order extends Model {
         modelClass: OrderItem,
         join: {
           from: 'orders.id',
-          to: 'order_items.product_id'
+          to: 'order_items.order_id'
         }
       }
     }

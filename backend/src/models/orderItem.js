@@ -4,15 +4,15 @@ class OrderItem extends Model {
   static tableName = 'order_items'
 
   static get relationMappings() {
-    const Order = require('./order')
+    const Variant = require('./variant')
 
     return {
-      order: {
+      variant: {
         relation: Model.BelongsToOneRelation,
-        modelClass: Order,
+        modelClass: Variant,
         join: {
-          from: 'orderItems.orderId',
-          to: 'orders.id'
+          from: 'order_items.variantId',
+          to: 'variants.id'
         }
       }
     }

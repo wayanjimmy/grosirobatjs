@@ -17,7 +17,16 @@ function createErrorLogger(_options) {
     const log = logger[logLevel]
 
     if (options.logRequest(status) && !req.path.includes('/auth')) {
+      logRequestDetails(logLevel, req, status)
     }
+
+    if (options.logStackTrace(status)) {
+      log(err, err.stack)
+    } else {
+      log(err.toString())
+    }
+
+    next(err)
   }
 }
 
