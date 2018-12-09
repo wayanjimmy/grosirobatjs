@@ -8,6 +8,7 @@
     "scripts": {
         "build": "yarn --cwd frontend install && yarn --cwd frontend build && yarn --cwd backend install && yarn --cwd backend build",
         "deploy": "cp -a frontend/build/. public/",
-        "heroku-postbuild": "yarn build && yarn deploy"
+        "heroku-postbuild": "yarn build && yarn deploy",
+        "test": "yarn --cwd backend install && yarn --cwd backend test"
     }
 }
