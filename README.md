@@ -8,3 +8,6 @@ Grosirobat Fullstack JS
 | --- | --- |
 | username | admin@grosirobat.com |
 | password | secret |
+
+### References
+- https://github.com/nafiesl/grosir-obat
