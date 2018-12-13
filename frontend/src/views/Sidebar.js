@@ -56,6 +56,9 @@ function Sidebar() {
           <MenuItem to="/order-list" icon="file-text">
             Penjualan
           </MenuItem>
+          <MenuItem to="/inventory-list" icon="database">
+            Inventori
+          </MenuItem>
           <MenuItem to="/pos" icon="cart">
             POS
           </MenuItem>
