@@ -1,5 +1,6 @@
 import React from 'react'
 import {Formik} from 'formik'
+import {Persist} from 'formik-persist'
 
 import Layout from '../views/Layout'
 import VariantPicker from '../views/VariantPicker'
@@ -60,7 +61,15 @@ function Pos() {
                   <ul data-uk-tab>
                     {values.orders.map((_order, index) => (
                       <li key={index}>
-                        <a onClick={() => {}}>Transaksi.{index + 1}</a>
+                        <a
+                          href="/"
+                          onClick={e => {
+                            e.preventDefault()
+                            setFieldValue('currentOrderIndex', index)
+                          }}
+                        >
+                          Transaksi.{index + 1}
+                        </a>
                       </li>
                     ))}
                   </ul>
@@ -74,7 +83,9 @@ function Pos() {
                         let orders = [...values.orders, initOrder()]
                         setFieldValue('orders', orders)
                       }}
-                    />
+                    >
+                      {''}
+                    </a>
                   </div>
                 </div>
               </div>
@@ -147,9 +158,26 @@ function Pos() {
                               {values.orders[values.currentOrderIndex].items
                                 .length > 1 && (
                                 <a
+                                  href="/"
                                   className="uk-icon-link uk-text-danger"
                                   data-uk-icon="minus-circle"
-                                  onClick={() => {}}
+                                  onClick={e => {
+                                    e.preventDefault()
+                                    let {confirm} = window
+                                    if (confirm('Yakin menghapus item ini?')) {
+                                      let items = values.orders[
+                                        values.currentOrderIndex
+                                      ].items.filter(
+                                        (_item, idx) => idx !== index
+                                      )
+                                      setFieldValue(
+                                        `orders.${
+                                          values.currentOrderIndex
+                                        }.items`,
+                                        items
+                                      )
+                                    }
+                                  }}
                                 >
                                   {''}
                                 </a>
@@ -268,6 +296,7 @@ function Pos() {
               </div>
             </div>
           </div>
+          <Persist name="grosirobat-pos-data" />
         </Layout>
       )}
     />

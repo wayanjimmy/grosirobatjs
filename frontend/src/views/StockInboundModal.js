@@ -4,7 +4,6 @@ import PropTypes from 'prop-types'
 import UIkit from 'uikit'
 import { Formik } from 'formik'
 
-import ky from '../utils/api'
 import InputText from './InputText'
 import InputVariantSelect from './InputVariantSelect'
 
