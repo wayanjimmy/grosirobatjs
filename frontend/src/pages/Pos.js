@@ -1,6 +1,5 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react'
-import { Formik } from 'formik'
+import {Formik} from 'formik'
 
 import Layout from '../views/Layout'
 import VariantPicker from '../views/VariantPicker'
@@ -24,20 +23,20 @@ function calculateTotalOrder(order) {
   )
 }
 
-function OrderItemSummary({ order }) {
-  const itemCount = order.items.length
+function OrderItemSummary({order}) {
+  let itemCount = order.items.length
 
   if (itemCount === 0) {
     return null
   }
 
-  const uoms = {}
+  let uoms = {}
   order.items.forEach(item => {
-    const initialQuantity = uoms[item.variant.uom] || 0
+    let initialQuantity = uoms[item.variant.uom] || 0
     uoms[item.variant.uom] = initialQuantity + item.quantity
   })
 
-  const uomSummary = Object.keys(uoms)
+  let uomSummary = Object.keys(uoms)
     .map(uom => `${uoms[uom]} ${uom}`)
     .join(',')
 
@@ -47,15 +46,12 @@ function OrderItemSummary({ order }) {
 function Pos() {
   return (
     <Formik
-      initialValues={{ orders: [initOrder()], currentOrderIndex: 0 }}
+      initialValues={{orders: [initOrder()], currentOrderIndex: 0}}
       validate={values => {
         let errors = {}
-        if (values.orders[values.currentOrderIndex].customerName === '') {
-          errors.customerName = 'required'
-        }
         return errors
       }}
-      render={({ values, errors, setFieldValue }) => (
+      render={({values, errors, setFieldValue}) => (
         <Layout withSidebar={false}>
           <div className="uk-width-1-1@l">
             <div className="uk-card uk-card-default uk-card-small uk-card-hover">
@@ -68,14 +64,26 @@ function Pos() {
                       </li>
                     ))}
                   </ul>
+                  <div>
+                    <a
+                      href="/"
+                      className="uk-icon-link"
+                      data-uk-icon="plus"
+                      onClick={e => {
+                        e.preventDefault()
+                        let orders = [...values.orders, initOrder()]
+                        setFieldValue('orders', orders)
+                      }}
+                    />
+                  </div>
                 </div>
               </div>
               <div className="uk-card-body uk-grid">
                 <div className="uk-width-1-1">
                   <VariantPicker
                     onSelect={(variant, quantity) => {
-                      let { items } = values.orders[values.currentOrderIndex]
-                      const alreadyExists = items.some(
+                      let {items} = values.orders[values.currentOrderIndex]
+                      let alreadyExists = items.some(
                         item => item.variant.id === variant.id
                       )
                       if (alreadyExists) {
@@ -89,7 +97,7 @@ function Pos() {
                           return item
                         })
                       } else {
-                        items.push({ variant, quantity })
+                        items.push({variant, quantity})
                       }
                       setFieldValue(
                         `orders.${values.currentOrderIndex}.items`,
@@ -151,7 +159,7 @@ function Pos() {
                         )
                       )}
                       {(() => {
-                        const total = calculateTotalOrder(
+                        let total = calculateTotalOrder(
                           values.orders[values.currentOrderIndex]
                         )
                         return (
@@ -248,7 +256,8 @@ function Pos() {
                         }
                         onClick={e => {
                           e.preventDefault()
-                          const order = values.orders[values.currentOrderIndex]
+                          let order = values.orders[values.currentOrderIndex]
+                          console.log(order)
                         }}
                       >
                         Proses
