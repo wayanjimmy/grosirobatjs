@@ -9,19 +9,21 @@ import ky from '../utils/api'
 const controller = new AbortController()
 const { signal } = controller
 
-export default function BaseInputSelect({ baseUrl, ...props }) {
+function BaseInputSelect({ baseUrl, params, mapOption, ...props }) {
   const fetch = debounce(async (inputValue = '', callback) => {
     try {
+      const q = new URLSearchParams()
+      Object.keys(params).forEach(key => q.append(key, params[key]))
       const res = await ky
-        .get(`${baseUrl}?search=${inputValue}`, { signal })
+        .get(
+          `${baseUrl}?search=${inputValue}${
+            q.toString().length > 0 ? '&' + q.toString() : ''
+          }`,
+          { signal }
+        )
         .json()
       const { data: categories } = res
-      callback(
-        categories.map(category => ({
-          value: category.id,
-          label: category.name
-        }))
-      )
+      callback(categories.map(mapOption))
     } catch (error) {}
   }, 300)
 
@@ -47,5 +49,14 @@ export default function BaseInputSelect({ baseUrl, ...props }) {
 }
 
 BaseInputSelect.propTypes = {
-  baseUrl: PropTypes.string.isRequired
+  baseUrl: PropTypes.string.isRequired,
+  mapOption: PropTypes.func.isRequired,
+  params: PropTypes.object.isRequired
 }
+
+BaseInputSelect.defaultProps = {
+  params: {},
+  mapOption: option => ({ value: option.id, label: option.name })
+}
+
+export default BaseInputSelect

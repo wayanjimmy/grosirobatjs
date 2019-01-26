@@ -2,8 +2,8 @@
     "name": "grosirobatjs",
     "license": "MIT",
     "engines": {
-        "node": "10.14.1",
-        "yarn": "1.12.3"
+        "node": "10.15.0",
+        "yarn": "1.13.0"
     },
     "scripts": {
         "build": "yarn --cwd frontend install && yarn --cwd frontend build && yarn --cwd backend install && yarn --cwd backend build",

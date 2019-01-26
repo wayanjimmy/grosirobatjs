@@ -36,6 +36,10 @@ async function index({ query }, res) {
     })
   }
 
+  if (_.has(query, 'productId')) {
+    variants = variants.where('productId', query.productId)
+  }
+
   const { results, total } = await variants
 
   res.json({

@@ -44,7 +44,7 @@ export default function ProductList() {
           <Paginator
             url="/api/products"
             params={{ search }}
-            render={({ items, getPaginationProps }) => (
+            render={({ items, getPaginationProps }) => console.log(items) || (
               <div className="uk-card-body uk-grid">
                 <div className="uk-width-1-1@l uk-width-1-1@s">
                   <div>
@@ -60,8 +60,8 @@ export default function ProductList() {
                         </tr>
                       </thead>
                       <tbody>
-                        {items.map(product => (
-                          <tr className="uk-visible-toggle" key={product.id}>
+                        {items.map((product, index) => (
+                          <tr className="uk-visible-toggle" key={index}>
                             <td className="uk-text-right">{product.sku}</td>
                             <td>
                               <div>{product.name}</div>
