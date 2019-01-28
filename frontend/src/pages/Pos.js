@@ -2,6 +2,8 @@ import React from 'react'
 import {Formik} from 'formik'
 import {Persist} from 'formik-persist'
 
+import ky from '../utils/api'
+import notif from '../utils/notif'
 import Layout from '../views/Layout'
 import VariantPicker from '../views/VariantPicker'
 import Price from '../views/Price'
@@ -52,7 +54,42 @@ function Pos() {
         let errors = {}
         return errors
       }}
-      render={({values, errors, setFieldValue}) => (
+      onSubmit={async (values, actions) => {
+        actions.setSubmitting(true)
+        let order = values.orders[values.currentOrderIndex]
+        let items = order.items.map(item => ({
+          variantId: item.variant.id,
+          quantity: item.quantity
+        }))
+        try {
+          await ky
+            .post('/api/orders', {
+              json: {
+                customerName: order.customerName,
+                customerPhone: order.customerPhone,
+                items
+              }
+            })
+            .json()
+
+          let refreshOrder = initOrder()
+          actions.setFieldValue(
+            `orders.${values.currentOrderIndex}`,
+            refreshOrder
+          )
+          notif({
+            message: 'Berhasil disimpan',
+            status: 'primary'
+          })
+        } catch (err) {
+          notif({
+            message: 'Terjadi kesalahan :(',
+            status: 'danger'
+          })
+        }
+        actions.setSubmitting(false)
+      }}
+      render={({values, errors, setFieldValue, isSubmitting, submitForm}) => (
         <Layout withSidebar={false}>
           <div className="uk-width-1-1@l">
             <div className="uk-card uk-card-default uk-card-small uk-card-hover">
@@ -284,11 +321,10 @@ function Pos() {
                         }
                         onClick={e => {
                           e.preventDefault()
-                          let order = values.orders[values.currentOrderIndex]
-                          console.log(order)
+                          submitForm()
                         }}
                       >
-                        Proses
+                        {isSubmitting ? 'Menyimpan...' : 'Simpan'}
                       </button>
                     </div>
                   </form>

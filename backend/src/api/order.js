@@ -111,7 +111,8 @@ async function store(req, res) {
       .insert({
         no,
         totalAmount,
-        ..._.omit(value, 'items')
+        ..._.omit(value, 'items'),
+        paidAt: new Date().toISOString()
       })
       .returning('*')
 

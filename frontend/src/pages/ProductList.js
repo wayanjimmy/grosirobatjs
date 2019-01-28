@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useState } from 'react'
-import { navigate } from '@reach/router'
+import React, {useState} from 'react'
+import {navigate} from '@reach/router'
 
 import Layout from '../views/Layout'
 import Paginator from '../views/Paginator'
@@ -43,8 +43,8 @@ export default function ProductList() {
           </div>
           <Paginator
             url="/api/products"
-            params={{ search }}
-            render={({ items, getPaginationProps }) => console.log(items) || (
+            params={{search}}
+            render={({items, getPaginationProps}) => (
               <div className="uk-card-body uk-grid">
                 <div className="uk-width-1-1@l uk-width-1-1@s">
                   <div>
