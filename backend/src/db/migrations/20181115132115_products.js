@@ -11,6 +11,7 @@ exports.up = knex => {
       .notNullable()
       .defaultTo(0)
     t.timestamps(true, true)
+    t.boolean('deleted').defaultTo(false)
 
     t.foreign('category_id')
       .references('id')

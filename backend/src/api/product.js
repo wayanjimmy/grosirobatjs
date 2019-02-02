@@ -24,6 +24,7 @@ async function index({ query }, res) {
   query.select = await getDefaultSelect()
 
   let products = Product.query()
+    .whereNotDeleted()
     .eager('category')
     .select(
       ...query.select,
@@ -135,6 +136,8 @@ async function destroy(req, res) {
     .delete()
     .where({ id })
     .first()
+    .throwIfNotFound()
+    .returning('*')
 
   res.json({ data: deletedProduct })
 }

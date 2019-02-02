@@ -1,6 +1,8 @@
+const SoftDelete = require('objection-soft-delete')
+
 const Model = require('./model')
 
-class Product extends Model {
+class Product extends SoftDelete()(Model) {
   static tableName = 'products'
 
   static get relationMappings() {

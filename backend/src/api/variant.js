@@ -22,6 +22,7 @@ async function index({ query }, res) {
   query.select = await getDefaultSelect()
 
   let variants = Variant.query()
+    .whereNotDeleted()
     .select(query.select)
     .eager('[product]')
     .orderBy(query.orderBy, 'desc')

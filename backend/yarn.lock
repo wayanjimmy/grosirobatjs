@@ -4931,6 +4931,11 @@ objection-db-errors@^1.0.0:
   dependencies:
     db-errors "^0.1.0"
 
+objection-soft-delete@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/objection-soft-delete/-/objection-soft-delete-1.0.5.tgz#15e7f8dcc74419fec4363b29330868dd1da8a6f2"
+  integrity sha512-YgU4bTQEoZWY6xR+QwsKbiWTQsVcsGOem0pmQsILcrSW9HKf3nfjsPGfkyo1AYUy+pSbpCSx9uBvOSYOFtkMeA==
+
 objection@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/objection/-/objection-1.4.0.tgz#18ddcdc121ae9b5d1e8e88b10fd0a6c96134f422"

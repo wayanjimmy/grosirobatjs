@@ -10,6 +10,7 @@ exports.up = knex => {
       .notNullable()
     t.string('uom').notNullable()
     t.timestamps(true, true)
+    t.boolean('deleted').defaultTo(false)
 
     t.foreign('product_id')
       .references('id')
