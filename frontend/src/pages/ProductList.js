@@ -2,6 +2,7 @@
 import React, {useState} from 'react'
 import {navigate} from '@reach/router'
 
+import ky from '../utils/api'
 import Layout from '../views/Layout'
 import Paginator from '../views/Paginator'
 
@@ -44,7 +45,7 @@ export default function ProductList() {
           <Paginator
             url="/api/products"
             params={{search}}
-            render={({items, getPaginationProps}) => (
+            render={({items, fetch, getPaginationProps}) => (
               <div className="uk-card-body uk-grid">
                 <div className="uk-width-1-1@l uk-width-1-1@s">
                   <div>
@@ -86,7 +87,18 @@ export default function ProductList() {
                                 className="uk-icon-link uk-text-danger"
                                 data-uk-icon="trash"
                                 data-uk-tooltip="Hapus"
-                                onClick={() => {}}
+                                onClick={async () => {
+                                  if (
+                                    window.confirm(
+                                      `Yakin hapus ${product.name}?`
+                                    )
+                                  ) {
+                                    await ky
+                                      .delete(`/api/products/${product.id}`)
+                                      .json()
+                                    fetch()
+                                  }
+                                }}
                               >
                                 {''}
                               </a>

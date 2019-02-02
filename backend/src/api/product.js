@@ -2,6 +2,7 @@ const { transaction } = require('objection')
 const _ = require('lodash')
 
 const Product = require('../models/product')
+const Variant = require('../models/variant')
 const productSchema = require('../schemas/product')
 
 const PAGE_SIZE = 10
@@ -109,9 +110,39 @@ async function update(req, res) {
   res.json({ data: product })
 }
 
+async function destroy(req, res) {
+  let { id } = req.params
+
+  let product = await Product.query()
+    .eager({
+      category: true
+    })
+    .where('id', id)
+    .first()
+    .throwIfNotFound()
+
+  let variants = await product.$relatedQuery('variants')
+
+  for (let variant of variants) {
+    await Variant.query()
+      .delete()
+      .where({ id: variant.id })
+      .first()
+      .throwIfNotFound()
+  }
+
+  let deletedProduct = await Product.query()
+    .delete()
+    .where({ id })
+    .first()
+
+  res.json({ data: deletedProduct })
+}
+
 module.exports = {
   index,
   store,
   show,
-  update
+  update,
+  destroy
 }

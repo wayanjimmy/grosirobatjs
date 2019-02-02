@@ -33,6 +33,7 @@ router.get('/products', authMiddleware.required, product.index)
 router.post('/products', authMiddleware.required, product.store)
 router.get('/products/:id', authMiddleware.required, product.show)
 router.put('/products/:id', authMiddleware.required, product.update)
+router.delete('/products/:id', authMiddleware.required, product.destroy)
 
 router.get('/variants', authMiddleware.required, variant.index)
 router.post('/variants', authMiddleware.required, variant.store)
