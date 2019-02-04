@@ -1,4 +1,4 @@
-# GrosirObatJS [![Build Status](https://travis-ci.org/wayanjimmy/grosirobatjs.svg?branch=master)](https://travis-ci.org/wayanjimmy/grosirobatjs)
+# GrosirObatJS [![Build Status](https://travis-ci.org/wayanjimmy/grosirobatjs.svg?branch=master)](https://travis-ci.org/wayanjimmy/grosirobatjs) [![Greenkeeper badge](https://badges.greenkeeper.io/wayanjimmy/grosirobatjs.svg)](https://greenkeeper.io/)
 
 Grosirobat Fullstack JS
 
