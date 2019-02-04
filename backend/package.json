@@ -16,7 +16,7 @@
     "express-promise-router": "^3.0.3",
     "faker": "^4.1.0",
     "jsonwebtoken": "^8.4.0",
-    "knex": "^0.15.2",
+    "knex": "^0.16.3",
     "lodash": "^4.17.11",
     "morgan": "^1.9.1",
     "objection": "^1.4.0",
@@ -35,8 +35,8 @@
   },
   "devDependencies": {
     "babel-core": "^7.0.0-bridge.0",
-    "babel-jest": "^23.6.0",
-    "jest": "^23.6.0",
+    "babel-jest": "^24.0.0",
+    "jest": "^24.0.0",
     "supertest": "^3.3.0"
   },
   "jest": {
