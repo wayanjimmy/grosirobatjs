@@ -13,12 +13,7 @@ const variant = yup
     uom: yup
       .string()
       .required()
-      .trim(),
-
-    productId: yup.number().when('$store', {
-      is: true,
-      then: yup.number().required()
-    })
+      .trim()
   })
   .noUnknown()
 
