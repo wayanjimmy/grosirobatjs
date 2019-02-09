@@ -5950,10 +5950,10 @@ kleur@^2.0.1:
   resolved "https://registry.yarnpkg.com/kleur/-/kleur-2.0.2.tgz#b704f4944d95e255d038f0cb05fb8a602c55a300"
   integrity sha512-77XF9iTllATmG9lSlIv0qdQ2BQ/h9t0bJllHlbvsQ0zUWfU7Yi0S8L5JXzPZgkefIiajLmBJJ4BsMJmqcf7oxQ==
 
-ky@^0.7.1:
-  version "0.7.1"
-  resolved "https://registry.yarnpkg.com/ky/-/ky-0.7.1.tgz#625caee8ed2392eda0d96b84cac55e543a9186c3"
-  integrity sha512-TzbFiF49OXKHBuNaeft6KIZhKa4WNslqjmDs56y6qWQJp+cUOH5EipnJRKl2XpGsBJqpoETFJ2MA/ZYfKA1Qew==
+ky@^0.8.0:
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/ky/-/ky-0.8.0.tgz#7fc2e965bcbbd3d5e7986a004858e40fb5208825"
+  integrity sha512-nnYt5Ivmeau7k0uIt+YISFKxu4Wu1LRjqJLWSS2ec9eBgr8vKxju5OveDFxz4XSXAmmL+32oI7JwG6XUD05p8Q==
 
 last-call-webpack-plugin@^3.0.0:
   version "3.0.0"
