@@ -1,6 +1,6 @@
 {
     "name": "grosirobatjs",
-    "license": "MIT",
+    "license": "Unlicense",
     "engines": {
         "node": "10.15.0",
         "yarn": "1.13.0"
