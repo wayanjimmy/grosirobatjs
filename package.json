@@ -2,7 +2,7 @@
     "name": "grosirobatjs",
     "license": "Unlicense",
     "engines": {
-        "node": "10.15.0",
+        "node": "10.15.1",
         "yarn": "1.13.0"
     },
     "scripts": {
