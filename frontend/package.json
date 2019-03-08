@@ -13,7 +13,7 @@
     "prop-types": "^15.6.2",
     "react": "^16.8.0-alpha.1",
     "react-dom": "^16.8.0-alpha.1",
-    "react-scripts": "2.1.5",
+    "react-scripts": "2.1.6",
     "react-select": "^2.1.1",
     "uikit": "^3.0.2",
     "url-search-params-polyfill": "^5.0.0"
