@@ -16,7 +16,7 @@
     "react-scripts": "3.0.0",
     "react-select": "^2.1.1",
     "uikit": "^3.0.2",
-    "url-search-params-polyfill": "^5.0.0"
+    "url-search-params-polyfill": "^6.0.0"
   },
   "scripts": {
     "start": "react-scripts start",
