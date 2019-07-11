@@ -16,7 +16,7 @@
     "express-promise-router": "^3.0.3",
     "faker": "^4.1.0",
     "jsonwebtoken": "^8.4.0",
-    "knex": "^0.18.0",
+    "knex": "^0.19.0",
     "lodash": "^4.17.11",
     "morgan": "^1.9.1",
     "objection": "^1.4.0",
