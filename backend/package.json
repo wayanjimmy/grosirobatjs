@@ -12,7 +12,7 @@
     "dotenv": "^8.0.0",
     "express": "^4.16.4",
     "express-history-api-fallback": "^2.2.1",
-    "express-jwt": "^5.3.1",
+    "express-jwt": "^5.3.2",
     "express-promise-router": "^3.0.3",
     "faker": "^4.1.0",
     "jsonwebtoken": "^8.4.0",
