@@ -17,7 +17,7 @@
     "faker": "^4.1.0",
     "jsonwebtoken": "^8.4.0",
     "knex": "^0.20.0",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.19",
     "morgan": "^1.9.1",
     "objection": "^2.0.0",
     "objection-db-errors": "^1.0.0",
