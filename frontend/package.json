@@ -9,7 +9,7 @@
     "formik": "^2.0.1",
     "formik-persist": "^1.1.0",
     "ky": "^0.17.0",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.19",
     "prop-types": "^15.6.2",
     "react": "^16.8.0-alpha.1",
     "react-dom": "^16.8.0-alpha.1",
